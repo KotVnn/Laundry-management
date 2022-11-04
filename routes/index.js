@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
-const title = 'Gặt là 83';
+const title = 'Giặt là 83';
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
