@@ -7,5 +7,6 @@ db.mongoose = mongoose;
 
 db.customer = require('./customer.model');
 db.order = require('./order.model');
+db.point = require('./point.model');
 
 module.exports = db;

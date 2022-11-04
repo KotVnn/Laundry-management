@@ -4,10 +4,44 @@ block content
   .container
     .row
       .col-12
-        if customer
-          p= customer.name
-        else
-          p Tạo khách hàng mới
-        form.input-group(method='post' action='/add')
-          input.form-control(type='text' placeholder='Số điện thoại khách hàng' aria-label='Số điện thoại khách hàng' name='phone')
-          button.input-group-text Tạo đơn hàng
+        .card
+          h5.card-header Thêm đơn hàng mới
+          .card-body
+            form(method='post' action='/order/add')
+              .input-group.my-2
+                span.input-group-text Tên khách hàng
+                input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer ? customer.fullName : ''}`)
+              .input-group.my-2
+                span.input-group-text Địa chỉ
+                input.form-control(type='text' placeholder='83 Tô Thị' aria-label='Địa chỉ' name='address' value=`${customer ? customer.address : ''}`)
+              .input-group.my-2
+                span.input-group-text Số điện thoại
+                input.form-control(type='number' placeholder='0983660xxx' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}`)
+              .input-group.my-2
+                span.input-group-text Điểm thưởng
+                input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${customer ? customer.point : ''}`)
+                .input-group-text
+                  input.form-check-input.mt-0(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' value='')
+              .input-group.my-2
+                span.input-group-text Số lượng
+                input.form-control(type='number' placeholder='2' aria-label='Số lượng' name='quantity')
+                span.input-group-text Chiếc
+              .input-group.my-2
+                span.input-group-text Tổng tiền
+                input#total.form-control(type='number' placeholder='100' aria-label='Tổng tiền' name='total' required)
+                span.input-group-text .000đ
+              .input-group.my-2
+                span.input-group-text Khuyến mãi
+                input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount')
+                span.input-group-text .000đ
+              .input-group.my-2
+                span.input-group-text Ghi chú
+                textarea.form-control(placeholder='Ghi chú' aria-label='Ghi chú' name='note')
+              button.btn.btn-primary.align-items-end(type='submit') Tạo đơn hàng
+
+  script(src='https://code.jquery.com/jquery-3.6.1.slim.min.js')
+  script.
+    $('#total').on('keyup', () => {
+      const total = $('#total').val()
+      $('#point').val(total / 10)
+    });

@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 const orders = mongoose.model(
   'orders',
   new mongoose.Schema({
-    _id: Schema.Types.ObjectId,
+    id: String,
     quantity: Number,
     status: Number,
     date: Date,
-    userPoint: Boolean,
+    usePoint: Boolean,
     total: Number,
     discount: Number,
     customer: {
       type: Schema.Types.ObjectId,
-      ref: 'customer',
+      ref: 'customers',
     },
   }),
 );

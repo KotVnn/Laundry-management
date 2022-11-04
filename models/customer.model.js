@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const customers = mongoose.model(
   'customers',
   new mongoose.Schema({
-    _id: Schema.Types.ObjectId,
     fullName: String,
     phone: String,
     address: String,
