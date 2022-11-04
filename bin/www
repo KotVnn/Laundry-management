@@ -8,6 +8,7 @@ const app = require('../app');
 const debug = require('debug')('laundry:server');
 const http = require('http');
 require('dotenv').config({path: __dirname + '/../.dev.env'});
+const db = require('../models');
 
 /**
  * Get port from environment and store in Express.
@@ -29,6 +30,19 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+/**
+ * Connect mongo database
+ */
+db.mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('Successfully connect to MongoDB.');
+  })
+  .catch((err) => {
+    console.error('Connection error', err);
+    process.exit();
+  });
 
 /**
  * Normalize a port into a number, string, or false.

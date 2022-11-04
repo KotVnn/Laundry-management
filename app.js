@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
@@ -17,6 +18,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// parse requests of content-type - application/json
+app.use(bodyParser.json({ limit: '50mb' }));
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(
+  bodyParser.urlencoded({
+    limit: '50mb',
+    extended: true,
+    parameterLimit: 50000,
+  }),
+);
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
