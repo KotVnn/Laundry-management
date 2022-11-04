@@ -10,13 +10,27 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/order/create', async (req, res) => {
-  if (!req.body || !req.body.phone) {
+  if (
+    !req.body ||
+    !req.body.phone ||
+    req.body.phone.length < 10 ||
+    !req.body.phone.match(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
+  ) {
     return res.redirect('/');
   }
   const phone = req.body.phone.replace(/ .'",-\(\)\+/g, '');
-  const customer = await cusCon.findCustomer(phone);
-  console.log(customer);
-  return res.render('create', { title, customer });
+  let customer = await cusCon.findCustomer(phone);
+  if (!customer)
+    customer = {
+      fullName: 'Khách lẻ',
+      address: '',
+      phone: req.body.phone,
+      point: 0,
+    };
+  return res.render('create', {
+    title,
+    customer,
+  });
 });
 
 router.post('/order/add', async (req, res) => {

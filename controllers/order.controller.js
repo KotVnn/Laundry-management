@@ -23,7 +23,7 @@ exports.add = async (order) => {
     usePoint: order.usePoint,
     customer: customer._id,
     total: order.total,
-    discount: order.discount,
+    discount: order.discount ? order.discount : 0,
   });
   await newOrder.save();
   customer.orders.push(newOrder._id);
@@ -34,15 +34,17 @@ exports.add = async (order) => {
 };
 
 const createOrderId = async () => {
-  const totalOrder = await Order.find().count();
   const thisDayText = new Date()
     .toLocaleDateString('vi-VN', {
       day: '2-digit',
       month: '2-digit',
       year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
     })
-    .replace(/\//g, '');
-  return `${thisDayText}-${totalOrder}`;
+    .replace(/\/|:|,| /g, '');
+  return `${thisDayText}`;
 };
 
 exports.findById = (id) => {

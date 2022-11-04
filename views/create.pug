@@ -10,10 +10,10 @@ block content
             form(method='post' action='/order/add')
               .input-group.my-2
                 span.input-group-text Tên khách hàng
-                input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer ? customer.fullName : ''}`)
+                input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : ''}`)
               .input-group.my-2
                 span.input-group-text Địa chỉ
-                input.form-control(type='text' placeholder='83 Tô Thị' aria-label='Địa chỉ' name='address' value=`${customer ? customer.address : ''}`)
+                input.form-control(type='text' placeholder='83 Tô Thị' aria-label='Địa chỉ' name='address' value=`${customer && customer.address ? customer.address : ''}`)
               .input-group.my-2
                 span.input-group-text Số điện thoại
                 input.form-control(type='number' placeholder='0983660xxx' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}`)
