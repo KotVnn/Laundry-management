@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  .container
+    .row
+      .col-12
+        if customer
+          p= customer.name
+        else
+          p Tạo khách hàng mới
+        form.input-group(method='post' action='/add')
+          input.form-control(type='text' placeholder='Số điện thoại khách hàng' aria-label='Số điện thoại khách hàng' name='phone')
+          button.input-group-text Tạo đơn hàng

@@ -8,7 +8,9 @@ const orders = mongoose.model(
     quantity: Number,
     status: Number,
     date: Date,
+    userPoint: Boolean,
     total: Number,
+    discount: Number,
     customer: {
       type: Schema.Types.ObjectId,
       ref: 'customer',

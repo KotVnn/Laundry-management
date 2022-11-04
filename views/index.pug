@@ -1,5 +1,9 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .container
+    .row
+      .col-12
+        form.input-group(method='post' action='/create')
+          input#phone.form-control(type='text' placeholder='Số điện thoại khách hàng' aria-label='Số điện thoại khách hàng' name='phone' required)
+          button.btn.btn-primary(type='submit') Tạo đơn hàng

@@ -1,5 +1,1 @@
-exports.add = (req, res) => {
-	const obj = {
-		
-	}
-}
+const Order = require('../models').order;
