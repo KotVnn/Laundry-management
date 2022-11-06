@@ -1,0 +1,12 @@
+mixin modal(titleModal, contentText, url)
+	#myModal.modal.fade(tabindex='-1' aria-labelledby='myModal' aria-hidden='true')
+		.modal-dialog.modal-dialog-centered
+			.modal-content
+				.modal-header
+					h1#modalTitle.modal-title.fs-5=titleModal
+					button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+				.modal-body=contentText
+				.modal-footer
+					button.btn.btn-secondary(type='button' data-bs-dismiss='modal') Hủy
+					if url
+						a.btn.btn-danger(type='button' href=url) Xóa

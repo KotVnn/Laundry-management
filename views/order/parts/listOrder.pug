@@ -1,0 +1,22 @@
+mixin elementOrder(orders)
+	each order in orders
+		a.text-decoration-none(href=`/order/${order.id}` aria-current='true')
+			.card.mb-3(class=`${order.status && order.status.length ? order.status[order.status.length-1].stt.class : 'text-bg-danger'}`)
+				h5.card-header.d-flex.justify-content-between.align-items-center= order.customer.fullName
+					small= `#${order.id}`
+				.card-body
+					.list-group
+						.list-group-item.list-group-item-action.list-group-item-success
+							.d-flex.w-100.justify-content-between
+								div
+									h5.mb-1.number= order.total
+								if order.quantity
+									div
+										if order.point
+											span.badge.bg-success.rounded-pill.mx-1= `${order.point} điểm`
+										span.badge.bg-primary.rounded-pill.mx-1= `${order.quantity} chiếc`
+							if order.status && order.status.length
+								p.mb-1=order.status[order.status.length - 1].stt.name
+									if (order.customer && order.customer.phone) || (customer && customer.phone)
+										i.ml-2=order.customer.phone ? ` - ${order.customer.phone}` : ` - ${customer.phone}`
+								small.text-muted.timeText= order.status[order.status.length - 1].time
