@@ -3,7 +3,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 		h5.card-header.d-flex.justify-content-between.align-items-center= headText
 			if order
 				.d-flex.justify-content-end.align-items-center
-					button.btn.btn-danger.mx-1(type='' disabled) Xóa
+					button.btn.btn-danger.mx-1(type='button' data-bs-toggle='modal' data-bs-target='#myModal') Xóa
 					button.btn.btn-primary.mx-1(type='submit') Cập nhập
 		.card-body
 			if order && order.id
@@ -52,3 +52,5 @@ mixin detailOrder(order, customer, headText, listStatus)
 							.ms-2.me-auto
 								.fw-bold= status.stt.name
 								.timeText= status.time
+	include ../../components/modal
+	+modal('#' + order.id, 'Bạn có chắc chắn muốn xóa đơn hàng này ?', `/order/delete/${order.id}`)

@@ -7,10 +7,3 @@ exports.findAll = () => {
 exports.findById = (id) => {
   return Status.findOne({ id });
 };
-
-exports.updateStt = async (id) => {
-  return {
-    stt: await Status.findOne({ id }),
-    time: new Date().toLocaleString(),
-  };
-};

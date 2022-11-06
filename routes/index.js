@@ -6,8 +6,7 @@ const sttCon = require('../controllers/status.controller');
 const title = 'Giặt là 83';
 
 /* GET home page. */
-router.get('/', async (req, res, next) => {
-  console.log(await sttCon.updateStt(1));
+router.get('/', async (req, res) => {
   res.render('index', { title });
 });
 
@@ -46,15 +45,6 @@ router.post('/order', async (req, res) => {
   else return res.render('order/fail', { title, order: req.body });
 });
 
-router.post('/order/update', async (req, res) => {
-  if (!req.body || !req.body.phone) {
-    return res.redirect('/');
-  }
-  const order = await orderCon.update(req.body);
-  if (order) return res.redirect('/order/' + req.body.id);
-  else return res.render('order/fail', { title, order: req.body });
-});
-
 router.get('/order/:id', async (req, res) => {
   if (
     !req.params ||
@@ -67,6 +57,15 @@ router.get('/order/:id', async (req, res) => {
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
   return res.render('order/detail', { title, order, listStatus });
+});
+
+router.post('/order/update', async (req, res) => {
+  if (!req.body || !req.body.phone) {
+    return res.redirect('/');
+  }
+  const order = await orderCon.update(req.body);
+  if (order) return res.redirect('/order/' + req.body.id);
+  else return res.render('order/fail', { title, order: req.body });
 });
 
 router.post('/order/create', async (req, res) => {
@@ -91,6 +90,17 @@ router.post('/order/create', async (req, res) => {
     title,
     customer,
   });
+});
+
+router.get('/order/delete/:id', async (req, res) => {
+  if (req.params.id) {
+    const rs = await orderCon.delOrder(req.params.id);
+    if (rs && rs.deletedCount && rs.deletedCount === 1)
+      return res.redirect('/order');
+    return res.redirect('/order/' + req.params.id);
+  } else {
+    return res.status(500).send();
+  }
 });
 
 module.exports = router;

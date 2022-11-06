@@ -88,3 +88,7 @@ exports.findAll = () => {
 exports.findById = (id) => {
   return Order.findOne({ id }).populate('customer').populate('status.stt');
 };
+
+exports.delOrder = (id) => {
+  return Order.deleteOne({ id });
+};
