@@ -1,7 +1,7 @@
 mixin elementOrder(orders)
 	each order in orders
 		a.text-decoration-none(href=`/order/${order.id}` aria-current='true')
-			.card.text-bg-success.mb-3
+			.card.mb-3(class=`${order.status && order.status.length ? order.status[order.status.length-1].stt.class : 'text-bg-danger'}`)
 				h5.card-header.d-flex.justify-content-between.align-items-center= order.customer.fullName
 					small= `#${order.id}`
 				.card-body

@@ -27,7 +27,7 @@ exports.add = async (order) => {
     point: pointCal,
     note: order.note,
     total: order.total < 10000 ? order.total * 1000 : order.total,
-    discount: order.discount ? order.discount : 0,
+    discount: order.discount ? order.discount * 1000 : 0,
     status: await sttCon.updateStt(1),
   });
   await newOrder.save();
@@ -58,7 +58,8 @@ exports.update = (order) => {
     const oldOrder = await Order.findOne({ id: order.id });
     for (const key in order) {
       if (key.indexOf('status') === -1) {
-        if (key === 'total') oldOrder[key] = order[key] * 1000;
+        if (key === 'total' || key === 'discount')
+          oldOrder[key] = order[key] * 1000;
         else oldOrder[key] = order[key];
       } else {
         oldOrder[key].push({

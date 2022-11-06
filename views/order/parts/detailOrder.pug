@@ -6,7 +6,8 @@ mixin detailOrder(order, customer, headText, listStatus)
 					button.btn.btn-danger.mx-1(type='' disabled) Xóa
 					button.btn.btn-primary.mx-1(type='submit') Cập nhập
 		.card-body
-			input(type='hidden' name='id' value=order.id)
+			if order && order.id
+				input(type='hidden' name='id' value=order.id)
 			.input-group.my-2
 				span.input-group-text Tên khách hàng
 				input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : ''}`)
@@ -18,9 +19,10 @@ mixin detailOrder(order, customer, headText, listStatus)
 				input.form-control(type='number' placeholder='0983660xxx' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}`)
 			.input-group.my-2
 				span.input-group-text Điểm thưởng
-				input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${order && order.point ? order.point : ''}`)
-				.input-group-text
-					input.form-check-input.mt-0(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' checked=order && order.usePoint)
+				input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${order && order.point ? order.point : ''}` disabled)
+				if order && customer && customer.discount
+					.input-group-text
+						input.form-check-input.mt-0(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' checked=order && order.usePoint)
 			.input-group.my-2
 				span.input-group-text Số lượng
 				input.form-control(type='number' placeholder='2' aria-label='Số lượng' name='quantity' value=`${order && order.quantity ? order.quantity : ''}`)
@@ -31,7 +33,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 				span.input-group-text .000đ
 			.input-group.my-2
 				span.input-group-text Khuyến mãi
-				input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : ''}`)
+				input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : 0}`)
 				span.input-group-text .000đ
 			if order && listStatus && listStatus.length && order.status
 				select.form-select(arial-label='Trạng thái' name='status')

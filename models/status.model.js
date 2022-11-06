@@ -5,6 +5,7 @@ const status = mongoose.model(
   new mongoose.Schema({
     name: String,
     id: Number,
+    class: String,
   }),
 );
 
