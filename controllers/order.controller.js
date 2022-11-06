@@ -82,7 +82,8 @@ exports.findAll = () => {
   return Order.find()
     .sort({ _id: -1 })
     .populate('customer')
-    .populate('status.stt');
+    .populate('status.stt')
+    .limit(30);
 };
 
 exports.findById = (id) => {

@@ -27,7 +27,6 @@ for (const num of allNumText) {
     }
     i++;
   }
-  console.log(arrText);
   $(num).text(arrText.join(' '));
 }
 

@@ -41,7 +41,7 @@ router.post('/order', async (req, res) => {
     return res.redirect('/');
   }
   const order = await orderCon.add(req.body);
-  if (order) return res.redirect('/order/success/' + order.id);
+  if (order) return res.redirect('/order/' + order.id);
   else return res.render('order/fail', { title, order: req.body });
 });
 

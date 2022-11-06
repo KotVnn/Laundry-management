@@ -53,4 +53,5 @@ mixin detailOrder(order, customer, headText, listStatus)
 								.fw-bold= status.stt.name
 								.timeText= status.time
 	include ../../components/modal
-	+modal('#' + order.id, 'Bạn có chắc chắn muốn xóa đơn hàng này ?', `/order/delete/${order.id}`)
+	if order
+		+modal('#' + order.id, 'Bạn có chắc chắn muốn xóa đơn hàng này ?', `/order/delete/${order.id}`)
