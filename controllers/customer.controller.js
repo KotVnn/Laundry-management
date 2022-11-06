@@ -3,7 +3,12 @@ const Customer = require('../models').customer;
 exports.findCustomer = (phone) => {
   return new Promise((resolve) => {
     Customer.findOne({ phone })
-      .populate('orders')
+      .populate({
+        path: 'orders',
+        populate: {
+          path: 'status.stt',
+        },
+      })
       .exec((err, cus) => {
         if (err) {
           console.error(err.message);
