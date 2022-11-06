@@ -68,7 +68,7 @@ exports.update = (order) => {
         });
       }
     }
-    Order.updateOne({ id: order.id }, oldOrder, (err, res) => {
+    Order.updateOne({ id: order.id }, oldOrder, (err) => {
       if (err) {
         console.error(err.message);
         return resolve(false);
