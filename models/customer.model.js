@@ -7,8 +7,7 @@ const customers = mongoose.model(
     fullName: String,
     phone: String,
     address: String,
-    note: String,
-    point: Number,
+    pointUsed: Number,
     orders: [
       {
         type: Schema.Types.ObjectId,

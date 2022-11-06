@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+		.container.mt-5.pt-3
+			.row
+				.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
+					include parts/listOrder
+					+elementOrder(orders)

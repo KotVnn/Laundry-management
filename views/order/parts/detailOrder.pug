@@ -1,0 +1,47 @@
+mixin detailOrder(order, customer, headText)
+	form.card(method='post' action=`${order ? '/order/update' : '/order/add'}`)
+		h5.card-header.d-flex.justify-content-between.align-items-center= headText
+			if order
+				.d-flex.justify-content-end.align-items-center
+					button.btn.btn-danger.mx-1(type='' disabled) Xóa
+					button.btn.btn-primary.mx-1(type='submit' disabled) Cập nhập
+		.card-body
+			.input-group.my-2
+				span.input-group-text Tên khách hàng
+				input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : ''}`)
+			.input-group.my-2
+				span.input-group-text Địa chỉ
+				input.form-control(type='text' placeholder='83 Tô Thị' aria-label='Địa chỉ' name='address' value=`${customer && customer.address ? customer.address : ''}`)
+			.input-group.my-2
+				span.input-group-text Số điện thoại
+				input.form-control(type='number' placeholder='0983660xxx' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}`)
+			.input-group.my-2
+				span.input-group-text Điểm thưởng
+				input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${order && order.point ? order.point : ''}`)
+				.input-group-text
+					input.form-check-input.mt-0(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' checked=order && order.usePoint)
+			.input-group.my-2
+				span.input-group-text Số lượng
+				input.form-control(type='number' placeholder='2' aria-label='Số lượng' name='quantity' value=`${order && order.quantity ? order.quantity : ''}`)
+				span.input-group-text Chiếc
+			.input-group.my-2
+				span.input-group-text Tổng tiền
+				input#total.form-control(type='number' placeholder='100' aria-label='Tổng tiền' name='total' required value=`${order && order.total ? order.total / 1000 : ''}`)
+				span.input-group-text .000đ
+			.input-group.my-2
+				span.input-group-text Khuyến mãi
+				input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : ''}`)
+				span.input-group-text .000đ
+			.input-group.my-2
+				span.input-group-text Ghi chú
+				textarea.form-control(placeholder='Ghi chú' aria-label='Ghi chú' name='note' value=`${order && order.note ? order.note : ''}`)
+			if !order
+				.d-gid.gap-2.d-flex.justify-content-end
+					button.btn.btn-primary.me-md-2(type='submit') Tạo đơn hàng
+			if order && order.status && order.status.length
+				ol.list-group.list-group-numbered
+					each status, i in order.status.reverse()
+						li.list-group-item.d-flex.justify-content-between.align-items-start(class=`${i === 0 ? 'active' : ''}`)
+							.ms-2.me-auto
+								.fw-bold= status.stt.name
+								.timeText= status.time

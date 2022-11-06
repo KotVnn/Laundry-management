@@ -1,0 +1,17 @@
+mixin elementOrder(orders)
+	each order in orders
+		a.text-decoration-none(href=`/order/${order.id}` aria-current='true')
+			.card.text-bg-success.mb-3
+				h5.card-header.d-flex.justify-content-between.align-items-center= order.customer.fullName
+					small= `#${order.id}`
+				.card-body
+					.list-group
+						.list-group-item.list-group-item-action.list-group-item-success
+							.d-flex.w-100.justify-content-between
+								div
+									h5.mb-1= order.total
+								if order.quantity
+									div
+										span.badge.bg-primary.rounded-pill.mx-1= `${order.quantity} chiếc`
+							p.mb-1= order.status
+							small.text-muted= order.date

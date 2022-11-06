@@ -2,11 +2,49 @@ const express = require('express');
 const router = express.Router();
 const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
+const sttCon = require('../controllers/status.controller');
 const title = 'Giặt là 83';
 
 /* GET home page. */
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
+  console.log(await sttCon.updateStt(1));
   res.render('index', { title });
+});
+
+router.get('/customer', async (req, res) => {
+  const listCustomer = await cusCon.findAll();
+  return res.render('customer/index', { title, listCustomer });
+});
+
+router.get('/customer/:phone', async (req, res) => {
+  if (
+    !req.params ||
+    !req.params.phone ||
+    req.params.phone.length < 10 ||
+    !req.params.phone.match(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
+  ) {
+    return res.redirect('/');
+  }
+  const customer = await cusCon.findCustomer(req.params.phone);
+  return res.render('customer/detail', { title, customer });
+});
+
+router.get('/order', async (req, res) => {
+  const orders = await orderCon.findAll();
+  return res.render('order/index', { title, orders });
+});
+
+router.get('/order/:id', async (req, res) => {
+  if (
+    !req.params ||
+    !req.params.id ||
+    req.params.id.length < 10 ||
+    !req.params.id.match(/\d/g)
+  ) {
+    return res.redirect('/');
+  }
+  const order = await orderCon.findById(req.params.id);
+  return res.render('order/detail', { title, order });
 });
 
 router.post('/order/create', async (req, res) => {

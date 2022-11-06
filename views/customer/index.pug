@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+	.container.mt-5.pt-3
+		.row
+			.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
+				.card
+					h5.card-header Danh sách khách hàng
+					.card-body
+						if listCustomer && listCustomer.length
+							.list-group
+								each el in listCustomer
+									a.list-group-item.list-group-item-action(href=`/customer/${el.phone}` aria-current='true')
+										.d-flex.w-100.justify-content-between
+											div
+												h5.mb-1= el.fullName
+											if el.orders && el.orders.length
+												div
+													span.badge.bg-success.rounded-pill.mx-1= `${el.point} điểm`
+													span.badge.bg-primary.rounded-pill.mx-1= `${el.orders.length} đơn`
+										p.mb-1=el.address
+										small.text-muted= el.phone
