@@ -5,9 +5,9 @@ block content
 		.row
 			.col-12
 				.card.text-center
-					h5.card-header= `#${order.id}`
+					h5.card-header=`#${order.id}`
 					.card-body
-						h5.card-title= order.customer.fullName
-						p.card-text= `Tổng ${order.total} (${order.quantity} chiếc)`
+						h5.card-title=order.customer.fullName
+						p.card-text.number=`Tổng ${order.total} (${order.quantity} chiếc)`
 						a.btn.btn-primary(href=`/order/${order.id}`) Xem chi tiết
-					.card-footer.text-muted= `Thời gian: ${new Date(order.date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false})}`
+					.card-footer.text-muted.timeText=order.date

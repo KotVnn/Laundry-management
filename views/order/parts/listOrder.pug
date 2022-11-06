@@ -9,9 +9,10 @@ mixin elementOrder(orders)
 						.list-group-item.list-group-item-action.list-group-item-success
 							.d-flex.w-100.justify-content-between
 								div
-									h5.mb-1= order.total
+									h5.mb-1.number= order.total
 								if order.quantity
 									div
 										span.badge.bg-primary.rounded-pill.mx-1= `${order.quantity} chiếc`
-							p.mb-1= order.status
-							small.text-muted= order.date
+							if order.status && order.status.length
+								p.mb-1= order.status[order.status.length - 1].stt.name
+							small.text-muted.timeText= order.date

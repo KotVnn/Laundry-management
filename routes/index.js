@@ -34,6 +34,24 @@ router.get('/order', async (req, res) => {
   return res.render('order/index', { title, orders });
 });
 
+router.post('/order', async (req, res) => {
+  if (!req.body || !req.body.phone) {
+    return res.redirect('/');
+  }
+  const order = await orderCon.add(req.body);
+  if (order) return res.redirect('/order/success/' + order.id);
+  else return res.render('order/fail', { title, order: req.body });
+});
+
+router.post('/order/update', async (req, res) => {
+  if (!req.body || !req.body.phone) {
+    return res.redirect('/');
+  }
+  const order = await orderCon.update(req.body);
+  if (order) return res.redirect('/order/' + req.body.id);
+  else return res.render('order/fail', { title, order: req.body });
+});
+
 router.get('/order/:id', async (req, res) => {
   if (
     !req.params ||
@@ -43,8 +61,9 @@ router.get('/order/:id', async (req, res) => {
   ) {
     return res.redirect('/');
   }
+  const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  return res.render('order/detail', { title, order });
+  return res.render('order/detail', { title, order, listStatus });
 });
 
 router.post('/order/create', async (req, res) => {
@@ -69,15 +88,6 @@ router.post('/order/create', async (req, res) => {
     title,
     customer,
   });
-});
-
-router.post('/order/add', async (req, res) => {
-  if (!req.body || !req.body.phone) {
-    return res.redirect('/');
-  }
-  const order = await orderCon.add(req.body);
-  if (order) return res.redirect('/order/success/' + order.id);
-  else return res.render('order/fail', { title, order: req.body });
 });
 
 router.get('/order/success/:orderId', async (req, res) => {

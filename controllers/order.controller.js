@@ -52,6 +52,31 @@ const createOrderId = () => {
   return `${thisDayText}`;
 };
 
+exports.update = (order) => {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve) => {
+    const oldOrder = await Order.findOne({ id: order.id });
+    for (const key in order) {
+      if (key.indexOf('status') === -1) {
+        if (key === 'total') oldOrder[key] = order[key] * 1000;
+        else oldOrder[key] = order[key];
+      } else {
+        oldOrder[key].push({
+          stt: order.status,
+          time: new Date().toLocaleString(),
+        });
+      }
+    }
+    Order.updateOne({ id: order.id }, oldOrder, (err, res) => {
+      if (err) {
+        console.error(err.message);
+        return resolve(false);
+      }
+      return resolve(true);
+    });
+  });
+};
+
 exports.findAll = () => {
   return Order.find()
     .sort({ _id: -1 })

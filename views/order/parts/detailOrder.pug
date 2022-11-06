@@ -1,11 +1,12 @@
-mixin detailOrder(order, customer, headText)
-	form.card(method='post' action=`${order ? '/order/update' : '/order/add'}`)
+mixin detailOrder(order, customer, headText, listStatus)
+	form.card(method='post' action=`${order ? '/order/update' : '/order'}`)
 		h5.card-header.d-flex.justify-content-between.align-items-center= headText
 			if order
 				.d-flex.justify-content-end.align-items-center
 					button.btn.btn-danger.mx-1(type='' disabled) Xóa
-					button.btn.btn-primary.mx-1(type='submit' disabled) Cập nhập
+					button.btn.btn-primary.mx-1(type='submit') Cập nhập
 		.card-body
+			input(type='hidden' name='id' value=order.id)
 			.input-group.my-2
 				span.input-group-text Tên khách hàng
 				input.form-control(type='text' placeholder='Nguyễn Văn A' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : ''}`)
@@ -32,6 +33,10 @@ mixin detailOrder(order, customer, headText)
 				span.input-group-text Khuyến mãi
 				input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : ''}`)
 				span.input-group-text .000đ
+			if order && listStatus && listStatus.length && order.status
+				select.form-select(arial-label='Trạng thái' name='status')
+					each el in listStatus
+						option(selected=order.status[order.status.length - 1].stt.id === el.id value=el._id)= el.name
 			.input-group.my-2
 				span.input-group-text Ghi chú
 				textarea.form-control(placeholder='Ghi chú' aria-label='Ghi chú' name='note' value=`${order && order.note ? order.note : ''}`)
