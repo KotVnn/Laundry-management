@@ -35,7 +35,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 				span.input-group-text Khuyến mãi
 				input.form-control(type='number' placeholder='100' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : 0}`)
 				span.input-group-text .000đ
-			if order && listStatus && listStatus.length && order.status
+			if order && order.status && order.status.length && listStatus && listStatus.length
 				select.form-select(arial-label='Trạng thái' name='status')
 					each el in listStatus
 						option(selected=order.status[order.status.length - 1].stt.id === el.id value=el._id)= el.name

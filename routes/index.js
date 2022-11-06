@@ -13,7 +13,9 @@ router.get('/', async (req, res, next) => {
 
 router.get('/customer', async (req, res) => {
   const listCustomer = await cusCon.findAll();
-  return res.render('customer/index', { title, listCustomer });
+  if (listCustomer)
+    return res.render('customer/index', { title, listCustomer });
+  else return res.status(500);
 });
 
 router.get('/customer/:phone', async (req, res) => {
@@ -26,7 +28,8 @@ router.get('/customer/:phone', async (req, res) => {
     return res.redirect('/');
   }
   const customer = await cusCon.findCustomer(req.params.phone);
-  return res.render('customer/detail', { title, customer });
+  if (customer) return res.render('customer/detail', { title, customer });
+  else return res.status(500).send();
 });
 
 router.get('/order', async (req, res) => {
@@ -88,17 +91,6 @@ router.post('/order/create', async (req, res) => {
     title,
     customer,
   });
-});
-
-router.get('/order/success/:orderId', async (req, res) => {
-  console.log('params', req.params);
-  const order = await orderCon.findById(req.params.orderId);
-  if (order) return res.render('order/success', { title, order });
-});
-
-router.get('/customer/:phone', async (req, res) => {
-  const customer = await cusCon.findCustomer(req.params.phone);
-  return res.render('customer/detail', { title, customer });
 });
 
 module.exports = router;

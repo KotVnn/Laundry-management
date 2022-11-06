@@ -19,7 +19,7 @@ block content
               input.form-control(type='number' placeholder='0983660xxx' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}`)
             .input-group.my-2
               span.input-group-text Điểm thưởng
-              input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${customer ? customer.point : ''}`)
+              input#point.form-control(type='number' placeholder='0' aria-label='Điểm thưởng' name='point' value=`${customer ? customer._doc.point : 0}` disabled)
 
     .row.mb-3
       .col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4

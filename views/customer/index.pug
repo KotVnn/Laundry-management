@@ -16,7 +16,8 @@ block content
 												h5.mb-1= el.fullName
 											if el.orders && el.orders.length
 												div
-													span.badge.bg-success.rounded-pill.mx-1= `${el.point} điểm`
+													if el._doc.point
+														span.badge.bg-success.rounded-pill.mx-1= `${el._doc.point} điểm`
 													span.badge.bg-primary.rounded-pill.mx-1= `${el.orders.length} đơn`
 										p.mb-1=el.address
 										small.text-muted= el.phone

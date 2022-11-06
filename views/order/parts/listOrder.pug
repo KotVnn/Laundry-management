@@ -12,6 +12,8 @@ mixin elementOrder(orders)
 									h5.mb-1.number= order.total
 								if order.quantity
 									div
+										if order.point
+											span.badge.bg-success.rounded-pill.mx-1= `${order.point} điểm`
 										span.badge.bg-primary.rounded-pill.mx-1= `${order.quantity} chiếc`
 							if order.status && order.status.length
 								p.mb-1= order.status[order.status.length - 1].stt.name
