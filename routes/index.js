@@ -123,4 +123,8 @@ router.get('/user', async (req, res) => {
   return res.render('user', { title });
 });
 
+router.get('/status', async (req, res) => {
+  return res.render('status', { title });
+});
+
 module.exports = router;
