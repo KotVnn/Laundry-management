@@ -14,17 +14,20 @@ exports.findCustomer = (phone) => {
           console.error('cus.findCustomer', err.message);
           return resolve(false);
         }
-        cus._doc.point = 0;
-        if (cus._doc.orders && cus._doc.orders.length) {
-          for (const order of cus._doc.orders) {
-            cus._doc.point += order._doc.point;
-          }
-        } else {
+        if (cus) {
           cus._doc.point = 0;
+          if (cus._doc.orders && cus._doc.orders.length) {
+            for (const order of cus._doc.orders) {
+              cus._doc.point += order._doc.point;
+            }
+          } else {
+            cus._doc.point = 0;
+          }
+          if (cus._doc.pointUsed)
+            cus._doc.point = cus._doc.point - cus._doc.pointUsed;
+          return resolve(cus);
         }
-        if (cus._doc.pointUsed)
-          cus._doc.point = cus._doc.point - cus._doc.pointUsed;
-        return resolve(cus);
+        return resolve(false);
       });
   });
 };
