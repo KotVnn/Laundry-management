@@ -11,5 +11,6 @@ db.point = require('./point.model');
 db.status = require('./status.model');
 db.role = require('./role.model');
 db.user = require('./user.model');
+db.session = require('./session.model');
 
 module.exports = db;

@@ -4,6 +4,8 @@ const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
+const userCon = require('../controllers/user.controller');
+const auth = require('../middlewares/auth');
 const title = 'Giặt là 83';
 
 /* GET home page. */
@@ -115,9 +117,19 @@ router.get('/search', async (req, res) => {
   }
 });
 
-router.get('/login', async (req, res) => {
+router.get('/login', auth.validateFormLoginSignup, async (req, res) => {
   return res.render('login', { title });
 });
+
+router.post('/login', auth.validateFormLoginSignup, async (req, res) => {
+  return res.render('login', { title });
+});
+
+router.get('/signup', async (req, res) => {
+  return res.render('signup', { title });
+});
+
+router.post('/signup', auth.validateFormLoginSignup, userCon.signup);
 
 router.get('/user', async (req, res) => {
   return res.render('user', { title });

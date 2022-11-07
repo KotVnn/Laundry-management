@@ -5,6 +5,7 @@ const user = mongoose.model(
   'user',
   new mongoose.Schema({
     username: String,
+    alias: String,
     password: String,
     email: String,
     phone: String,
@@ -13,8 +14,17 @@ const user = mongoose.model(
       type: Schema.Types.ObjectId,
       ref: 'roles',
     },
-    session: String,
+    session: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'sessions',
+      },
+    ],
     referer: String,
+    customer: {
+      type: Schema.Types.ObjectId,
+      ref: 'customers',
+    },
   }),
 );
 
