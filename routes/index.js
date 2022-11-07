@@ -115,4 +115,12 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.get('/login', async (req, res) => {
+  return res.render('login', { title });
+});
+
+router.get('/user', async (req, res) => {
+  return res.render('user', { title });
+});
+
 module.exports = router;
