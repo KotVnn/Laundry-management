@@ -11,7 +11,7 @@ exports.findCustomer = (phone) => {
       })
       .exec((err, cus) => {
         if (err) {
-          console.error(err.message);
+          console.error('cus.findCustomer', err.message);
           return resolve(false);
         }
         cus._doc.point = 0;
@@ -29,15 +29,15 @@ exports.findCustomer = (phone) => {
   });
 };
 
-exports.findAll = () => {
+exports.findAll = (query) => {
   return new Promise((resolve) => {
-    Customer.find()
+    Customer.find(query || {})
       .sort({ _id: -1 })
       .limit(30)
       .populate('orders')
       .exec((err, rs) => {
         if (err) {
-          console.error(err.message);
+          console.error('cus.findAll', err.message);
           return resolve(false);
         }
         const arrCustomer = rs.map((el) => {

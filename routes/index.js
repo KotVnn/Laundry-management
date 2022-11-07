@@ -3,6 +3,7 @@ const router = express.Router();
 const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
+const searchCon = require('../controllers/search.controller');
 const title = 'Giặt là 83';
 
 /* GET home page. */
@@ -100,6 +101,17 @@ router.get('/order/delete/:id', async (req, res) => {
     return res.redirect('/order/' + req.params.id);
   } else {
     return res.status(500).send();
+  }
+});
+
+router.get('/search', async (req, res) => {
+  if (req.query && req.query.key) {
+    const rs = await searchCon.search(req.query.key);
+    return res.render('search', {
+      title,
+      customers: rs[1].value,
+      orders: rs[0].value,
+    });
   }
 });
 
