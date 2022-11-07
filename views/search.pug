@@ -1,0 +1,26 @@
+extends layout
+
+block content
+	.container.mt-5.pt-3
+		.row.mb-3
+			.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
+				if customers && customers.length
+					.card.my-2
+						.card-header Khách hàng
+						.card-body
+							each cus in customers
+								a.text-decoration-none(href=`/customer/${cus.phone}`)
+									ul.list-group.list-group-horizontal.my-1
+										li.list-group-item= cus.fullName ? cus.fullName : 'Khách lẻ'
+										li.list-group-item= cus.phone ? cus.phone : ''
+										li.list-group-item= cus.address ? cus.address : ''
+				if orders && orders.length
+					.card.my-2
+						.card-header Đơn hàng
+						.card-body
+							each order in orders
+								a.text-decoration-none(href=`/order/${order.id}`)
+									ul.list-group.list-group-horizontal.my-1
+										li.list-group-item= order.id ? '#' + order.id : 'Khách lẻ'
+										li.list-group-item= order.customer && order.customer.phone ? order.customer.phone : ''
+										li.list-group-item= order.status && order.status.length ? order.status[order.status.length - 1].stt.name : ''

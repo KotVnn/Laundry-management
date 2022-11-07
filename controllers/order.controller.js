@@ -78,8 +78,8 @@ exports.update = (order) => {
   });
 };
 
-exports.findAll = () => {
-  return Order.find()
+exports.findAll = (query) => {
+  return Order.find(query || {})
     .sort({ _id: -1 })
     .populate('customer')
     .populate('status.stt')
