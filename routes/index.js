@@ -85,7 +85,7 @@ router.post('/order/create', async (req, res) => {
       fullName: 'Khách lẻ',
       address: '',
       phone: req.body.phone,
-      point: 0,
+      pointUsed: 0,
     };
   return res.render('create', {
     title,
