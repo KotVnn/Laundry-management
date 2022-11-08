@@ -4,6 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
+const session = require('express-session');
+const passport = require('passport');
+const flash = require('connect-flash');
+require('./bin/passport');
+require('dotenv').config({ path: './.dev.env' });
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -17,7 +22,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.SECRET_KEY ? process.env.SECRET_KEY : ''));
 // parse requests of content-type - application/json
 app.use(bodyParser.json({ limit: '50mb' }));
 
@@ -30,6 +35,18 @@ app.use(
   }),
 );
 app.use(express.static(path.join(__dirname, 'public')));
+
+// passport init
+app.use(
+  session({
+    secret: process.env.SECRET_KEY ? process.env.SECRET_KEY : 'laundry1',
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -1,7 +1,5 @@
 const User = require('../models').user;
-const sessionCon = require('./session.controller');
 const roleCon = require('./role.controller');
-const md5 = require('md5');
 
 exports.signup = async (req, res) => {
   const obj = { ...req.body };
@@ -9,16 +7,34 @@ exports.signup = async (req, res) => {
   obj.role = role[0]._id;
   obj.alias = obj.username;
   obj.username = obj.username.toLowerCase();
-  const session = await sessionCon.create(obj, req.headers['user-agent']);
-  obj.session = session._id;
-  obj.password = md5(obj.password);
-  const user = new User(obj);
+  let user = await sessionCon.create(obj, req.headers['user-agent']);
+  user.password = md5.encode(obj.password);
+  user = new User(user);
   user.save().then(() => {
-    res.cookie('ucl', session.md5, { maxAge: 78840000, httpOnly: false });
-    let nextUrl = '/';
-    if (req.headers.nextStep) nextUrl = req.headers.nextStep;
-    return res.redirect(nextUrl);
+    res.cookie('ucl', user.sessions[0].md5, {
+      maxAge: 7884000000,
+      httpOnly: false,
+    });
+    return res.redirect('/');
   });
+};
+
+exports.login = async (req, res) => {
+  let user = await User.findOne({
+    username: req.body.username.toLowerCase(),
+  }).populate('sessions');
+  if (user) {
+    user = await sessionCon.create(user, req.headers['user-agent']);
+    user.save().then(() => {
+      res.cookie('ucl', user.sessions[user.sessions.length - 1].md5, {
+        maxAge: 7884000000,
+        httpOnly: false,
+      });
+      return res.redirect('/');
+    });
+  } else {
+    return res.redirect('/login');
+  }
 };
 
 exports.isExists = (username) => {

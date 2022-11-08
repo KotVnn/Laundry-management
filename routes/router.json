@@ -1,0 +1,22 @@
+{
+  "isLogged": false,
+  "title": "Giặt là 83",
+  "r": {
+    "home": "/",
+    "login": "/login",
+    "signup": "/signup",
+    "customer": {
+      "default": "/customer",
+      "detail": "/customer/:phone"
+    },
+    "order": {
+      "default": "/order",
+      "create": "/order/create",
+      "update": "/order/update",
+      "delete": "/order/delete/:id",
+      "detail": "/order/:id"
+    },
+    "status": "/status",
+    "contact": "/contact"
+  }
+}

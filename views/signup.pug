@@ -4,15 +4,21 @@ block content
 	.container.mt-5.pt-3
 		.row
 			.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
-				form.card(method='post' action='signup')
-					h5.card-header.d-flex.justify-content-between.align-items-center= headText
+				form.card(method='post' action='/signup')
+					h5.card-header.d-flex.justify-content-between.align-items-center Đăng ký
 					.card-body
 						//input(type='hidden' name='id' value=order.id)
+						if hasErrors
+							each mess in messages
+								p.err= mess
 						.input-group.my-2
-							span.input-group-text Tên tài khoản
-							input.form-control(type='text' placeholder='Tên tài khoản' aria-label='Username' name='username')
+							span.input-group-text Tài khoản
+							input.form-control(type='text' placeholder='Tên đăng nhập' aria-label='Tên đăng nhập' name='username')
+						.input-group.my-2
+							span.input-group-text Email
+							input.form-control(type='text' placeholder='Email' aria-label='email' name='email')
 						.input-group.my-2
 							span.input-group-text Mật khẩu
 							input.form-control(type='password' placeholder='Mật khẩu' aria-label='Password' name='password')
 						.d-gid.gap-2.d-flex.justify-content-end
-							button.btn.btn-primary.me-md-2(type='submit') Tạo đơn hàng
+							button.btn.btn-primary.me-md-2(type='submit') Đăng ký

@@ -4,19 +4,16 @@ const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
-const userCon = require('../controllers/user.controller');
-const auth = require('../middlewares/auth');
-const title = 'Giặt là 83';
+const passport = require('passport');
 
 /* GET home page. */
 router.get('/', async (req, res) => {
-  res.render('index', { title });
+  res.render('index');
 });
 
 router.get('/customer', async (req, res) => {
   const listCustomer = await cusCon.findAll();
-  if (listCustomer)
-    return res.render('customer/index', { title, listCustomer });
+  if (listCustomer) return res.render('customer/index', { listCustomer });
   else return res.status(500);
 });
 
@@ -30,13 +27,13 @@ router.get('/customer/:phone', async (req, res) => {
     return res.redirect('/');
   }
   const customer = await cusCon.findCustomer(req.params.phone);
-  if (customer) return res.render('customer/detail', { title, customer });
+  if (customer) return res.render('customer/detail', { customer });
   else return res.status(500).send();
 });
 
 router.get('/order', async (req, res) => {
   const orders = await orderCon.findAll();
-  return res.render('order/index', { title, orders });
+  return res.render('order/index', { orders });
 });
 
 router.post('/order', async (req, res) => {
@@ -45,7 +42,7 @@ router.post('/order', async (req, res) => {
   }
   const order = await orderCon.add(req.body);
   if (order) return res.redirect('/order/' + order.id);
-  else return res.render('order/fail', { title, order: req.body });
+  else return res.render('order/fail', { order: req.body });
 });
 
 router.get('/order/:id', async (req, res) => {
@@ -59,7 +56,7 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  return res.render('order/detail', { title, order, listStatus });
+  return res.render('order/detail', { order, listStatus });
 });
 
 router.post('/order/update', async (req, res) => {
@@ -68,7 +65,7 @@ router.post('/order/update', async (req, res) => {
   }
   const order = await orderCon.update(req.body);
   if (order) return res.redirect('/order/' + req.body.id);
-  else return res.render('order/fail', { title, order: req.body });
+  else return res.render('order/fail', { order: req.body });
 });
 
 router.post('/order/create', async (req, res) => {
@@ -90,7 +87,6 @@ router.post('/order/create', async (req, res) => {
       pointUsed: 0,
     };
   return res.render('create', {
-    title,
     customer,
   });
 });
@@ -110,33 +106,54 @@ router.get('/search', async (req, res) => {
   if (req.query && req.query.key) {
     const rs = await searchCon.search(req.query.key);
     return res.render('search', {
-      title,
       customers: rs[1].value,
       orders: rs[0].value,
     });
   }
 });
 
-router.get('/login', auth.validateFormLoginSignup, async (req, res) => {
-  return res.render('login', { title });
+router.get('/login', async (req, res) => {
+  const messages = req.flash('error');
+  return res.render('login', { messages, hasErrors: messages.length > 0 });
 });
 
-router.post('/login', auth.validateFormLoginSignup, async (req, res) => {
-  return res.render('login', { title });
-});
+router.post(
+  '/login',
+  passport.authenticate('local.signin', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true,
+  }),
+);
 
-router.get('/signup', async (req, res) => {
-  return res.render('signup', { title });
-});
+router.get(
+  '/signup',
+  passport.authenticate('local.signin', {
+    successRedirect: '/',
+    failureRedirect: '/signup',
+    failureFlash: true,
+  }),
+  async (req, res) => {
+    const messages = req.flash('error');
+    return res.render('signup', { messages, hasErrors: messages.length > 0 });
+  },
+);
 
-router.post('/signup', auth.validateFormLoginSignup, userCon.signup);
+router.post(
+  '/signup',
+  passport.authenticate('local.signup', {
+    successRedirect: '/login',
+    failureRedirect: '/signup',
+    failureFlash: true,
+  }),
+);
 
 router.get('/user', async (req, res) => {
-  return res.render('user', { title });
+  return res.render('user', {});
 });
 
 router.get('/status', async (req, res) => {
-  return res.render('status', { title });
+  return res.render('status', {});
 });
 
 module.exports = router;
