@@ -5,6 +5,7 @@ const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
 const passport = require('passport');
+const auth = require('../middlewares/validator');
 
 /* GET home page. */
 router.get('/', async (req, res) => {
@@ -141,6 +142,7 @@ router.get(
 
 router.post(
   '/signup',
+  auth.validSignup,
   passport.authenticate('local.signup', {
     successRedirect: '/login',
     failureRedirect: '/signup',
