@@ -44,15 +44,21 @@ exports.findAll = (query) => {
           return resolve(false);
         }
         const arrCustomer = rs.map((el) => {
+          let point = 0;
           if (el.orders && el.orders.length) {
             for (const order of el.orders) {
-              el.point += order.point;
+              point += order.point;
             }
-          } else {
-            el.point = 0;
           }
-          if (el.pointUsed) el.point = el.point - el.pointUsed;
-          return el;
+          if (el.pointUsed) point = point - el.pointUsed;
+          console.log({
+            ...el,
+            point,
+          });
+          return {
+            ...el._doc,
+            point,
+          };
         });
         return resolve(arrCustomer);
       });

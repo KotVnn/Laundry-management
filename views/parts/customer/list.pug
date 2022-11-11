@@ -1,0 +1,30 @@
+.card-body.px-0.pb-2
+	.table-responsive.p-0
+		table.table.align-items-center.mb-0
+			thead
+				tr
+					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7 Tên/địa chỉ
+					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Số điện thoại
+					th.text-center.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7 Số đơn
+					th.text-center.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7 Điểm thưởng
+					th.text-secondary.opacity-7
+			tbody
+				each cus in listCustomer
+					tr
+						td
+							.d-flex.px-2.py-1
+								div
+									img.avatar.avatar-sm.me-3.border-radius-lg(src='../assets/img/no-avatar.png' alt=cus.fullName)
+								.d-flex.flex-column.justify-content-center
+									h6.mb-0.text-sm=cus.fullName
+									p.text-xs.text-secondary.mb-0=cus.address
+						td
+							p.text-xs.font-weight-bold.mb-0=cus.phone
+							//p.text-xs.text-secondary.mb-0
+						td.align-middle.text-center.text-sm
+							span.badge.badge-sm.bg-gradient-success=cus.orders.length
+						td.align-middle.text-center
+							span.badge.badge-sm.bg-gradient-success=cus.point
+						td.align-middle
+							a.text-secondary.font-weight-bold.text-xs(href='javascript:;' data-toggle='tooltip' data-original-title='Edit user')
+								| Sửa

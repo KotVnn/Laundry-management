@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
 
 router.get('/customer', async (req, res) => {
   const listCustomer = await cusCon.findAll();
+  console.log(listCustomer[0].orders);
   if (listCustomer) return res.render('customer/index', { listCustomer });
   else return res.status(500);
 });
