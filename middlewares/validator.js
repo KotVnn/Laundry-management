@@ -10,8 +10,12 @@ exports.validSignup = (req, res, next) => {
     errors.forEach((el) => {
       messages.push(el.msg);
     });
-    res.render('signup', { messages, hasErrors: messages.length > 0 });
   } else {
     next();
   }
+};
+
+exports.admin = (req, res, next) => {
+  if (req.isAuthenticated() && req.user.role.level === 1) return next();
+  return res.redirect('/login?returnUrl=' + req.originalUrl);
 };

@@ -1,11 +1,7 @@
 nav#navbarBlur.navbar.navbar-main.navbar-expand-lg.px-0.mx-4.shadow-none.border-radius-xl(navbar-scroll='true')
 	.container-fluid.py-1.px-3
 		nav(aria-label='breadcrumb')
-			ol.breadcrumb.bg-transparent.mb-0.pb-0.pt-1.px-0.me-sm-6.me-5
-				li.breadcrumb-item.text-sm
-					a.opacity-5.text-dark(href='javascript:;') Pages
-				li.breadcrumb-item.text-sm.text-dark.active(aria-current='page') Dashboard
-			h6.font-weight-bolder.mb-0 Dashboard
+			h6.font-weight-bolder.mb-0=moduleName ? moduleName : 'Unknown'
 		#navbar.collapse.navbar-collapse.mt-sm-0.mt-2.me-md-0.me-sm-4
 			.ms-md-auto.pe-md-3.d-flex.align-items-center
 				.input-group.input-group-outline
@@ -13,9 +9,9 @@ nav#navbarBlur.navbar.navbar-main.navbar-expand-lg.px-0.mx-4.shadow-none.border-
 					input.form-control(type='text')
 			ul.navbar-nav.justify-content-end
 				li.nav-item.d-flex.align-items-center
-					a.nav-link.text-body.font-weight-bold.px-0(href='javascript:;')
+					a.nav-link.text-body.font-weight-bold.px-0(href='/user')
 						i.fa.fa-user.me-sm-1
-						span.d-sm-inline.d-none Sign In
+						span.d-sm-inline.d-none=user && user.alias ? user.alias : 'Người dùng'
 				li.nav-item.d-xl-none.ps-3.d-flex.align-items-center
 					a#iconNavbarSidenav.nav-link.text-body.p-0(href='javascript:;')
 						.sidenav-toggler-inner

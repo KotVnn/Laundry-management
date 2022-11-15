@@ -8,7 +8,12 @@ const customers = mongoose.model(
       type: String,
       default: 'Khách lẻ',
     },
-    phone: String,
+    phone: {
+      type: String,
+      required: true,
+      sparse: true,
+      unique: true,
+    },
     address: String,
     pointUsed: {
       type: Number,

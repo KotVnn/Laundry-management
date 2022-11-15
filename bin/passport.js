@@ -2,9 +2,10 @@
 // load các module
 const passport = require('passport');
 // load user model
-const User = require('../models/user.model');
+const User = require('../models').user;
 const LocalStrategy = require('passport-local').Strategy;
 const roleCon = require('../controllers/role.controller');
+const userCon = require('../controllers/user.controller');
 // passport session setup
 // used to serialize the user for the session
 passport.serializeUser(function (user, done) {
@@ -14,7 +15,7 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
   User.findById(id, function (err, user) {
     done(err, user);
-  });
+  }).populate('role');
 });
 // local sign-up
 passport.use(
@@ -50,14 +51,12 @@ passport.use(
         newUser.email = req.body.email;
         newUser.password = newUser.encryptPassword(password);
         // lưu user
-        newUser
-          .save((err, result) => {
-            if (err) {
-              return done(err);
-            }
-            return done(null, newUser);
-          })
-          .then();
+        newUser.save((err, result) => {
+          if (err) {
+            return done(err);
+          }
+          return done(null, newUser);
+        });
       });
     },
   ),
@@ -75,22 +74,16 @@ passport.use(
       passReqToCallback: true,
       // cho phép chúng ta gửi reqest lại hàm callback
     },
-    function (req, username, password, done) {
+    async (req, username, password, done) => {
       // tìm một user với email
       // chúng ta sẽ kiểm tra xem user có thể đăng nhập không
-      User.findOne({ username: username.toLowerCase() }, function (err, user) {
-        if (err) {
-          return done(err);
-        }
-        // Nếu không có user thì in ra lỗi
-        if (!user) {
-          return done(null, false, { message: 'Not user found' });
-        }
-        if (!user.validPassword(password)) {
-          return done(null, false, { message: 'Wrong password' });
-        }
-        return done(null, user);
+      const user = await userCon.findOne({
+        username: username.toLowerCase(),
       });
+      if (!user) return done(null, false, { message: 'Not user found' });
+      if (!user.validPassword(password))
+        return done(null, false, { message: 'Wrong password' });
+      return done(null, user);
     },
   ),
 );

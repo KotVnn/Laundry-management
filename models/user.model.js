@@ -6,6 +6,8 @@ const schema = new Schema({
   username: {
     type: String,
     required: true,
+    sparse: true,
+    unique: true,
   },
   alias: String,
   password: {
@@ -15,12 +17,18 @@ const schema = new Schema({
   email: {
     type: String,
     required: true,
+    sparse: true,
+    unique: true,
   },
-  phone: String,
+  phone: {
+    type: String,
+    sparse: true,
+    unique: true,
+  },
   telegram: String,
   role: {
     type: Schema.Types.ObjectId,
-    ref: 'roles',
+    ref: 'role',
   },
   referer: String,
   customer: {

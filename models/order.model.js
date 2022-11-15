@@ -4,7 +4,12 @@ const Schema = mongoose.Schema;
 const orders = mongoose.model(
   'orders',
   new mongoose.Schema({
-    id: String,
+    id: {
+      type: String,
+      required: true,
+      sparse: true,
+      unique: true,
+    },
     quantity: {
       type: Number,
       default: 0,
