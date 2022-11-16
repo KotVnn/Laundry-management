@@ -109,8 +109,13 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  console.log(order);
-  return res.render('order/detail', { order, listStatus });
+  console.log('/order/:id', order.note);
+  return res.render('order/detail', {
+    order,
+    listStatus,
+    moduleName: 'Chi tiết đơn hàng #' + order.id,
+    title: title + ' - Chi tiết đơn hàng #' + order.id,
+  });
 });
 
 router.post('/order/update', async (req, res) => {
