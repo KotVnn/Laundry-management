@@ -52,7 +52,7 @@ router.post(
   }),
 );
 
-router.use(auth.admin);
+// router.use(auth.admin);
 
 /* GET home page. */
 router.get('/', async (req, res) => {
@@ -109,6 +109,7 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
+  console.log(order);
   return res.render('order/detail', { order, listStatus });
 });
 

@@ -62,10 +62,15 @@ exports.update = (order) => {
           oldOrder[key] = order[key] * 1000;
         else oldOrder[key] = order[key];
       } else {
-        oldOrder[key].push({
-          stt: order.status,
-          time: new Date().toLocaleString(),
-        });
+        if (
+          oldOrder[key].length &&
+          !oldOrder[key][oldOrder[key].length - 1] === order.status._id
+        ) {
+          oldOrder[key].push({
+            stt: order.status,
+            time: new Date().toLocaleString(),
+          });
+        }
       }
     }
     Order.updateOne({ id: order.id }, oldOrder, (err) => {
