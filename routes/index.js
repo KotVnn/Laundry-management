@@ -66,7 +66,7 @@ router.get('/hd/:id', async (req, res) => {
   ) {
     return res.redirect('/');
   }
-  if (req.user && req.user.level === 1) {
+  if (req.user && req.user.role.level === 1) {
     return res.redirect('/order/' + req.params.id);
   }
   return res.render('order/customer', {
