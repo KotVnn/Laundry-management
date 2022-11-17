@@ -3,7 +3,6 @@ $('#total').on('keyup', () => {
   let total = $('#total').val();
   if (!total) total = 0;
   const point = parseInt(currentPoint) + total / 10;
-  console.log(point);
   $('#point').val(point);
   if (total > 10) $('#usePoint').removeAttr('disabled');
   else $('#usePoint').attr('disabled', true);

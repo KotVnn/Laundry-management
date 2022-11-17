@@ -58,7 +58,6 @@ const createOrderId = () => {
 exports.update = (order) => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve) => {
-    console.log('order.update', order);
     const oldOrder = await Order.findOne({ id: order.id });
     for (const key in order) {
       if (key.indexOf('status') === -1) {

@@ -51,10 +51,6 @@ exports.findAll = (query) => {
             }
           }
           if (el.pointUsed) point = point - el.pointUsed;
-          console.log({
-            ...el,
-            point,
-          });
           return {
             ...el._doc,
             point,

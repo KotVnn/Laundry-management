@@ -108,7 +108,6 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  console.log('/order/:id', order, listStatus);
   return res.render('order/detail', {
     order,
     listStatus,
