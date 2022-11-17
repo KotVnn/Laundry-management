@@ -61,8 +61,8 @@ exports.update = (order) => {
     const oldOrder = await Order.findOne({ id: order.id });
     for (const key in order) {
       if (key.indexOf('status') === -1) {
-        if (key === 'total' || key === 'discount' || key === 'point') {
-          // oldOrder[key] = order[key] * 1000;
+        if (key === 'total') {
+          oldOrder[key] = order[key] * 1000;
         } else oldOrder[key] = order[key];
       } else {
         if (

@@ -1,8 +1,13 @@
-const currentPoint = $('#point').val();
+let currentPoint;
+if ($('#total').val() && parseInt($('#total').val()) > 1) {
+  currentPoint = $('#point').val() - $('#total').val() / 10;
+} else {
+  currentPoint = $('#point').val();
+}
 $('#total').on('keyup', () => {
   let total = $('#total').val();
   if (!total) total = 0;
-  const point = parseInt(currentPoint) + total / 10;
+  const point = (parseInt(currentPoint) + total / 10).toFixed();
   $('#point').val(point);
   if (total > 10) $('#usePoint').removeAttr('disabled');
   else $('#usePoint').attr('disabled', true);
@@ -42,11 +47,11 @@ $('#usePoint').change(function () {
   if (this.checked) {
     total.val(total.val() - currentPoint);
     discount.val(currentPoint);
-    point.val(total.val() / 10);
+    point.val(0);
   } else {
     total.val(parseInt(total.val()) + parseInt(discount.val()));
     discount.val(0);
-    point.val(parseInt(currentPoint) + total.val() / 10);
+    point.val(currentPoint);
   }
 });
 

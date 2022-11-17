@@ -1,0 +1,40 @@
+mixin detailOrder(order, customer, headText)
+	form.card(method='post' action=`${order ? '/order/update' : '/order'}`)
+		h5.card-header.d-flex.justify-content-between.align-items-center= headText
+		.card-body.text-start
+			if order && order.id
+			.input-group.input-group-outline.my-3.is-filled
+				label.form-label Tên khách hàng
+				input.form-control(type='text' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : 'Khách lẻ'}` disabled)
+			.input-group.input-group-outline.my-3(class=`${customer && customer.address ? 'is-filled' : ''}`)
+				label.form-label Địa chỉ
+				input.form-control(type='text' aria-label='Địa chỉ' name='address' value=`${customer && customer.address ? customer.address : ''}` disabled)
+			.input-group.input-group-outline.my-3(class=`${customer && customer.phone ? 'is-filled' : ''}`)
+				label.form-label Số điện thoại
+				input.form-control(type='number' aria-label='Số điện thoại' name='phone' required value=`${customer ? customer.phone : ''}` disabled)
+			if customer && customer._doc && customer._doc.point
+				.input-group.input-group-outline.my-3.is-filled
+					label.form-label Điểm thưởng
+					input#point.form-control(type='number' aria-label='Điểm thưởng' name='point' value=`${customer && customer._doc && customer._doc.point ? customer._doc.point : 0}` disabled)
+					if customer && customer._doc && customer._doc.point
+						.input-group-text.form-check.form-switch
+							input#usePoint.form-check-input.mt-0.z-index-1(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' disabled)
+				.input-group.input-group-outline.my-3.is-filled
+					label.form-label Khuyến mãi x1.000
+					input#discount.form-control(type='number' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : 0}` disabled)
+			.input-group.input-group-outline.my-3(class=`${order && order.quantity ? 'is-filled' : ''}`)
+				label.form-label Số lượng
+				input.form-control(type='number' aria-label='Số lượng' name='quantity' value=`${order && order.quantity ? order.quantity : ''}` disabled)
+			.input-group.input-group-outline.my-3.is-filled
+				label.form-label Tổng tiền x1.000
+				input#total.form-control(type='number' aria-label='Tổng tiền' name='total' required value=`${order && order.total ? order.total / 1000 : 0}` disabled)
+			.input-group.input-group-outline.my-3(class=`${order && order.note ? 'is-filled' : ''}`)
+				label.form-label Ghi chú
+				textarea.form-control(aria-label='Ghi chú' name='note' disabled)= order && order.note ? order.note : ''
+			if order && order.status && order.status.length
+				ol.list-group.list-group-numbered
+					each status, i in order.status.reverse()
+						li.list-group-item.d-flex.justify-content-between.align-items-start(class=`${i === 0 ? 'active' : ''}`)
+							.ms-2.me-auto
+								.fw-bold= status.stt.name
+								.timeText= status.time
