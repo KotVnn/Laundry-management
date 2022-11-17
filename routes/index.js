@@ -61,7 +61,6 @@ router.get('/', async (req, res) => {
 
 router.get('/customer', async (req, res) => {
   const listCustomer = await cusCon.findAll();
-  console.log(listCustomer[0].orders);
   if (listCustomer)
     return res.render('customer/index', {
       listCustomer,
@@ -109,6 +108,7 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
+  console.log('/order/:id', order, listStatus);
   return res.render('order/detail', {
     order,
     listStatus,

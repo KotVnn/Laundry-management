@@ -1,6 +1,12 @@
+const currentPoint = $('#point').val();
 $('#total').on('keyup', () => {
-  const total = $('#total').val();
-  $('#point').val(total / 10);
+  let total = $('#total').val();
+  if (!total) total = 0;
+  const point = parseInt(currentPoint) + total / 10;
+  console.log(point);
+  $('#point').val(point);
+  if (total > 10) $('#usePoint').removeAttr('disabled');
+  else $('#usePoint').attr('disabled', true);
 });
 
 const allTimeText = $('.timeText');
@@ -29,6 +35,21 @@ for (const num of allNumText) {
   }
   $(num).text(arrText.join(' '));
 }
+
+$('#usePoint').change(function () {
+  const total = $('#total');
+  const point = $('#point');
+  const discount = $('#discount');
+  if (this.checked) {
+    total.val(total.val() - currentPoint);
+    discount.val(currentPoint);
+    point.val(total.val() / 10);
+  } else {
+    total.val(parseInt(total.val()) + parseInt(discount.val()));
+    discount.val(0);
+    point.val(parseInt(currentPoint) + total.val() / 10);
+  }
+});
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');

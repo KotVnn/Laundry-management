@@ -22,15 +22,18 @@ exports.add = async (order) => {
     id: createOrderId(),
     quantity: order.quantity,
     date: new Date().toLocaleString(),
-    usePoint: order.usePoint,
+    usePoint: order.usePoint === 'on',
     customer: customer._id,
     point: pointCal,
     note: order.note,
     total: order.total < 10000 ? order.total * 1000 : order.total,
-    discount: order.discount ? order.discount * 1000 : 0,
-    status: await sttCon.updateStt(1),
+    discount: order.discount ? order.discount : 0,
+    status: await sttCon.updateStt(2),
   });
   await newOrder.save();
+  if (order.usePoint) {
+    customer.pointUsed += order.discount;
+  }
   customer.orders.unshift(newOrder._id);
   customer.save();
   return Order.findOne({ _id: newOrder._id })
