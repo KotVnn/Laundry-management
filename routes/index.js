@@ -56,6 +56,17 @@ router.post(
   }),
 );
 
+router.get('/profile', async (req, res) => {
+  if (req.isAuthenticated())
+    return res.render('profile', {
+      title,
+      user: req.user,
+      moduleName: 'Profile',
+      active: 6,
+    });
+  else return res.redirect('/login');
+});
+
 // router.use(auth.admin);
 
 /* GET home page. */
@@ -72,6 +83,7 @@ router.get('/customer', async (req, res) => {
   const listCustomer = await cusCon.findAll();
   if (listCustomer)
     return res.render('customer/index', {
+      user: req.user,
       listCustomer,
       moduleName: 'Khách hàng',
       active: 2,
@@ -92,6 +104,7 @@ router.get('/customer/:phone', async (req, res) => {
   if (customer)
     return res.render('customer/detail', {
       title,
+      user: req.user,
       customer,
       moduleName: 'Khách hàng',
       active: 2,
@@ -103,6 +116,7 @@ router.get('/order', async (req, res) => {
   const orders = await orderCon.findAll();
   return res.render('order/index', {
     title,
+    user: req.user,
     orders,
     moduleName: 'Đơn hàng',
     active: 3,
@@ -129,8 +143,11 @@ router.get('/order/:id', async (req, res) => {
   }
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
+  const customer = await cusCon.findCustomer(order.customer.phone);
   return res.render('order/detail', {
     order,
+    user: req.user,
+    customer,
     listStatus,
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
@@ -167,6 +184,7 @@ router.post('/order/create', async (req, res) => {
     };
   return res.render('create', {
     title,
+    user: req.user,
     customer,
     moduleName: 'Tạo đơn hàng mới',
     active: 3,
@@ -188,6 +206,9 @@ router.get('/search', async (req, res) => {
   if (req.query && req.query.key) {
     const rs = await searchCon.search(req.query.key);
     return res.render('search', {
+      title,
+      moduleName: 'Tìm kiếm',
+      user: req.user,
       customers: rs[1].value,
       orders: rs[0].value,
     });
@@ -199,25 +220,22 @@ router.get('/point', async (req, res) => {
   return res.render('point', {
     title,
     point,
+    user: req.user,
     moduleName: 'Cấu hình tính điểm',
     active: 4,
   });
 });
 
 router.post('/point', async (req, res) => {
-  console.log(req.body);
   await Point.updateOne({ id: 1 }, { discount: req.body.discount });
   return res.redirect('/point');
-});
-
-router.get('/profile', async (req, res) => {
-  return res.render('profile', { title, moduleName: 'Profile', active: 6 });
 });
 
 router.get('/status', async (req, res) => {
   const status = await Status.find();
   return res.render('status', {
     title,
+    user: req.user,
     moduleName: 'Cấu hình trạng thái',
     status,
     active: 5,
