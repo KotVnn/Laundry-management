@@ -54,7 +54,7 @@ router.post(
   }),
 );
 
-// router.use(auth.admin);
+router.use(auth.admin);
 
 /* GET home page. */
 router.get('/', async (req, res) => {
