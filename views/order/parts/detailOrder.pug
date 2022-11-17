@@ -10,7 +10,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 				input(type='hidden' name='id' value=order.id)
 			.input-group.input-group-outline.my-3.is-filled
 				label.form-label Tên khách hàng
-				input.form-control(type='text' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.name ? customer.name : 'Khách lẻ'}` )
+				input.form-control(type='text' aria-label='Tên khách hàng' name='fullName' value=`${customer && customer.fullName ? customer.fullName : 'Khách lẻ'}` )
 			.input-group.input-group-outline.my-3(class=`${customer && customer.address ? 'is-filled' : ''}`)
 				label.form-label Địa chỉ
 				input.form-control(type='text' aria-label='Địa chỉ' name='address' value=`${customer && customer.address ? customer.address : ''}`)
