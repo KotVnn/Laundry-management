@@ -6,6 +6,8 @@ const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
 const passport = require('passport');
 const auth = require('../middlewares/validator');
+const Point = require('../models').point;
+const Status = require('../models').status;
 const title = 'Giặt là 83';
 
 router.get('/login', async (req, res) => {
@@ -56,7 +58,12 @@ router.post(
 
 /* GET home page. */
 router.get('/', async (req, res) => {
-  res.render('index', { title, user: req.user, moduleName: 'Tổng quan' });
+  res.render('index', {
+    title,
+    user: req.user,
+    moduleName: 'Tổng quan',
+    active: 1,
+  });
 });
 
 router.get('/customer', async (req, res) => {
@@ -65,6 +72,7 @@ router.get('/customer', async (req, res) => {
     return res.render('customer/index', {
       listCustomer,
       moduleName: 'Khách hàng',
+      active: 2,
     });
   else return res.status(500);
 });
@@ -79,13 +87,24 @@ router.get('/customer/:phone', async (req, res) => {
     return res.redirect('/');
   }
   const customer = await cusCon.findCustomer(req.params.phone);
-  if (customer) return res.render('customer/detail', { customer });
+  if (customer)
+    return res.render('customer/detail', {
+      title,
+      customer,
+      moduleName: 'Khách hàng',
+      active: 2,
+    });
   else return res.status(500).send();
 });
 
 router.get('/order', async (req, res) => {
   const orders = await orderCon.findAll();
-  return res.render('order/index', { orders, moduleName: 'Đơn hàng' });
+  return res.render('order/index', {
+    title,
+    orders,
+    moduleName: 'Đơn hàng',
+    active: 3,
+  });
 });
 
 router.post('/order', async (req, res) => {
@@ -113,6 +132,7 @@ router.get('/order/:id', async (req, res) => {
     listStatus,
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
+    active: 3,
   });
 });
 
@@ -144,7 +164,10 @@ router.post('/order/create', async (req, res) => {
       pointUsed: 0,
     };
   return res.render('create', {
+    title,
     customer,
+    moduleName: 'Tạo đơn hàng mới',
+    active: 3,
   });
 });
 
@@ -169,12 +192,34 @@ router.get('/search', async (req, res) => {
   }
 });
 
+router.get('/point', async (req, res) => {
+  const point = await Point.findOne();
+  return res.render('point', {
+    title,
+    point,
+    moduleName: 'Cấu hình tính điểm',
+    active: 4,
+  });
+});
+
+router.post('/point', async (req, res) => {
+  console.log(req.body);
+  await Point.updateOne({ id: 1 }, { discount: req.body.discount });
+  return res.redirect('/point');
+});
+
 router.get('/user', async (req, res) => {
   return res.render('user', {});
 });
 
 router.get('/status', async (req, res) => {
-  return res.render('status', {});
+  const status = await Status.find();
+  return res.render('status', {
+    title,
+    moduleName: 'Cấu hình trạng thái',
+    status,
+    active: 5,
+  });
 });
 
 module.exports = router;
