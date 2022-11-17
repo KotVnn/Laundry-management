@@ -28,7 +28,7 @@ exports.add = async (order) => {
     note: order.note,
     total: order.total < 10000 ? order.total * 1000 : order.total,
     discount: order.discount ? order.discount : 0,
-    status: await sttCon.updateStt(2),
+    status: await sttCon.updateStt('Nhận đơn'.toUpperCase()),
   });
   await newOrder.save();
   if (order.usePoint) {
