@@ -208,8 +208,8 @@ router.post('/point', async (req, res) => {
   return res.redirect('/point');
 });
 
-router.get('/user', async (req, res) => {
-  return res.render('user', {});
+router.get('/profile', async (req, res) => {
+  return res.render('profile', { title, moduleName: 'Profile', active: 6 });
 });
 
 router.get('/status', async (req, res) => {
