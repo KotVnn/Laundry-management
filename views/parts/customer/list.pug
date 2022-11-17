@@ -12,19 +12,21 @@
 				each cus in listCustomer
 					tr
 						td
-							.d-flex.px-2.py-1
-								div
-									img.avatar.avatar-sm.me-3.border-radius-lg(src='../assets/img/no-avatar.png' alt=cus.fullName)
-								.d-flex.flex-column.justify-content-center
-									h6.mb-0.text-sm=cus.fullName
-									p.text-xs.text-secondary.mb-0=cus.address
+							a(href='/customer/' + cus.phone)
+								.d-flex.px-2.py-1
+									div
+										img.avatar.avatar-sm.me-3.border-radius-lg(src='../assets/img/no-avatar.png' alt=cus.fullName)
+									.d-flex.flex-column.justify-content-center
+										h6.mb-0.text-sm=cus.fullName
+										p.text-xs.text-secondary.mb-0=cus.address
 						td
-							p.text-xs.font-weight-bold.mb-0=cus.phone
-							//p.text-xs.text-secondary.mb-0
+							a(href='/customer/' + cus.phone)
+								p.text-xs.font-weight-bold.mb-0=cus.phone
+								//p.text-xs.text-secondary.mb-0
 						td.align-middle.text-center.text-sm
 							span.badge.badge-sm.bg-gradient-success=cus.orders.length
 						td.align-middle.text-center
 							span.badge.badge-sm.bg-gradient-success=cus.point
 						td.align-middle
-							a.text-secondary.font-weight-bold.text-xs(href='javascript:;' data-toggle='tooltip' data-original-title='Edit user')
+							a.text-secondary.font-weight-bold.text-xs(href='/customer/' + cus.phone data-toggle='tooltip' data-original-title='Edit user')
 								| Sửa
