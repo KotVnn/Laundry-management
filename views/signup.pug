@@ -1,54 +1,10 @@
-//extends layout
-//
-//block content
-//	.container.mt-5.pt-3
-//		.row
-//			.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
-//				form.card(method='post' action='/login')
-//					h5.card-header.d-flex.justify-content-between.align-items-center= headText
-//					.card-body
-//						//input(type='hidden' name='id' value=order.id)
-//						.input-group.my-2
-//							span.input-group-text Tên tài khoản
-//							input.form-control(type='text' placeholder='Tên tài khoản' aria-label='Username' name='username')
-//						.input-group.my-2
-//							span.input-group-text Mật khẩu
-//							input.form-control(type='password' placeholder='Mật khẩu' aria-label='Password' name='password')
-//						.d-gid.gap-2.d-flex.justify-content-end
-//							button.btn.btn-primary.me-md-2(type='submit') Đăng nhập
-mixin formUser(isSignup)
-	.card.z-index-0.fadeIn3.fadeInBottom.tab-pane.fade(id=`${isSignup ? 'formSignup' : 'formLogin'}` role='tabpanel' aria-labelledby='login-tab')
-		.card-header.p-0.position-relative.mt-n4.mx-3.z-index-2
-			.bg-gradient-primary.shadow-primary.border-radius-lg.py-3.pe-1
-				h4.text-white.font-weight-bolder.text-center.mt-2.mb-0 Sign in
-		.card-body
-			form.text-start(role='form' method='post' action=`${isSignup ? '/signup' : 'login'}`)
-				.input-group.input-group-outline.my-3
-					label.form-label Tên tài khoản
-					input.form-control(type='text' name='username')
-				.input-group.input-group-outline.mb-3
-					label.form-label Mật khẩu
-					input.form-control(type='password' name='password')
-				.text-center
-					button.btn.bg-gradient-primary.w-100.my-4.mb-2(type='submit') Đăng nhập
-				if !isSignup
-					p.mt-4.text-sm.text-center
-						| Chưa có tài khoản?
-						a.text-primary.text-gradient.font-weight-bold(data-bs-toggle='tab' data-bs-target='#formSignup' role='tab' aria-selected='false') Đăng kí
-				else
-					p.mt-4.text-sm.text-center
-						| Đã có tài khoản?
-						a.text-primary.text-gradient.font-weight-bold(data-bs-toggle='tab' data-bs-target='#formLogin' role='tab' aria-selected='true') Đăng nhập
-
-
 doctype html
 head
 	meta(charset='utf-8')
 	meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
 	link(rel='apple-touch-icon' sizes='76x76' href='../assets/img/apple-icon.png')
 	link(rel='icon' type='image/png' href='../assets/img/favicon.png')
-	title
-		| Material Dashboard 2 by Creative Tim
+	title=title ? title : 'Giặt là 83'
 	// Fonts and icons
 	link(rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700')
 	// Nucleo Icons
