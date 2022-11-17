@@ -14,6 +14,7 @@ router.get('/login', async (req, res) => {
   if (req.isAuthenticated()) return res.redirect('/');
   const messages = req.flash('error');
   return res.render('login', {
+    title,
     messages,
     hasErrors: messages.length > 0,
     returnUrl: req.query && req.query.returnUrl ? req.query.returnUrl : null,
@@ -24,6 +25,7 @@ router.get('/signup', async (req, res) => {
   if (req.isAuthenticated()) return res.redirect('/');
   const messages = req.flash('error');
   return res.render('signup', {
+    title,
     messages,
     hasErrors: messages.length > 0,
   });
