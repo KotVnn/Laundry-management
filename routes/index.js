@@ -222,4 +222,24 @@ router.get('/status', async (req, res) => {
   });
 });
 
+router.post('/status', async (req, res) => {
+  const obj = { ...req.body };
+  obj.name = obj.name.toUpperCase();
+  const newStt = new Status(obj);
+  await newStt.save();
+  return res.redirect('/status');
+});
+
+router.post('/status/:id', async (req, res) => {
+  const obj = { ...req.body };
+  obj.name = obj.name.toUpperCase();
+  await Status.updateOne({ id: req.body.id }, obj);
+  return res.redirect('/status');
+});
+
+router.get('/status/del/:id', async (req, res) => {
+  await Status.deleteOne({ id: req.params.id });
+  return res.redirect('/status');
+});
+
 module.exports = router;
