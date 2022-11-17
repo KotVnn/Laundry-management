@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const QRCode = require('qrcode');
 const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
@@ -55,6 +56,46 @@ router.post(
     failureFlash: true,
   }),
 );
+
+router.get('/hd/:id', async (req, res) => {
+  if (
+    !req.params ||
+    !req.params.id ||
+    req.params.id.length < 10 ||
+    !req.params.id.match(/\d/g)
+  ) {
+    return res.redirect('/');
+  }
+  if (req.user && req.user.level === 1) {
+    return res.redirect('/order/' + req.params.id);
+  }
+  return res.render('order/customer', {
+    title,
+    id: req.params.id,
+  });
+});
+
+router.post('/hd/:id', async (req, res) => {
+  if (
+    !req.params ||
+    !req.params.id ||
+    req.params.id.length < 10 ||
+    !req.params.id.match(/\d/g)
+  ) {
+    return res.redirect('/');
+  }
+  const order = await orderCon.findById(req.params.id);
+  const customer = await cusCon.findCustomer(order.customer.phone);
+  if (order && customer) {
+    return res.render('order/customer', {
+      title: title + ' - Chi tiết đơn hàng #' + order.id,
+      order,
+      customer,
+      id: req.params.id,
+    });
+  }
+  return res.redirect('/');
+});
 
 router.get('/profile', async (req, res) => {
   if (req.isAuthenticated())
@@ -151,6 +192,33 @@ router.get('/order/:id', async (req, res) => {
     listStatus,
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
+    active: 3,
+  });
+});
+
+router.get('/order/print/:id', async (req, res) => {
+  if (
+    !req.params ||
+    !req.params.id ||
+    req.params.id.length < 10 ||
+    !req.params.id.match(/\d/g)
+  ) {
+    return res.redirect('/');
+  }
+  const listStatus = await sttCon.findAll();
+  const order = await orderCon.findById(req.params.id);
+  const customer = await cusCon.findCustomer(order.customer.phone);
+  const qrImg = await QRCode.toDataURL(
+    `https://${req.headers.host}/hd/${order.id}`,
+  );
+  return res.render('order/print', {
+    order,
+    user: req.user,
+    customer,
+    listStatus,
+    moduleName: 'Chi tiết đơn hàng #' + order.id,
+    title: title + ' - Chi tiết đơn hàng #' + order.id,
+    qrImg,
     active: 3,
   });
 });

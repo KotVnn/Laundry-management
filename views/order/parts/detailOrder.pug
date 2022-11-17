@@ -1,10 +1,12 @@
 mixin detailOrder(order, customer, headText, listStatus)
 	form.card(method='post' action=`${order ? '/order/update' : '/order'}`)
 		h5.card-header.d-flex.justify-content-between.align-items-center= headText
-			if order
-				.d-flex.justify-content-end.align-items-center
-					button.btn.btn-danger.mx-1(type='button' data-bs-toggle='modal' data-bs-target='#myModal') Xóa
-					button.btn.btn-primary.mx-1(type='submit') Cập nhập
+		if order
+			.d-flex.justify-content-end.align-items-center
+				if order && order.id
+					a.btn.btn-success.mx-1(href='/order/print/' + order.id target='_blank') In
+				button.btn.btn-danger.mx-1(type='button' data-bs-toggle='modal' data-bs-target='#myModal') Xóa
+				button.btn.btn-primary.mx-1(type='submit') Cập nhập
 		.card-body.text-start
 			if order && order.id
 				input(type='hidden' name='id' value=order.id)

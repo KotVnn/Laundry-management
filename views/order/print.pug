@@ -1,0 +1,64 @@
+doctype html
+head
+	title=title
+	meta(charset='utf-8')
+	style.
+		@media print {
+			body * {
+					visibility: hidden;
+			}
+			.print-container, .print-container * {
+					visibility: visible;
+			}
+		}
+
+body(style='width: 219px;background:transparent')
+	button(onclick='window.print()') IN HÓA ĐƠN
+	div.print-container(style='width: 219px;padding: 10px')
+		div(style='text-align: center')
+			h1(style='margin: 8px 0 0') GIẶT 83
+			small 83 Tô Thị - TP. Lạng Sơn
+			br
+			small SĐT: 0375 806 906
+			br
+			| ***
+		div(style='margin: 3px 0')
+			h5(style='margin: 0')='MÃ HÓA ĐƠN: #' + order.id
+			small.timeText=new Date().toLocaleString()
+			br
+			small=`Khách hàng: ${order.customer.fullName ? order.customer.fullName : 'khách lẻ'}`
+			br
+			small=`SĐT: ${order.customer.phone ? 'xxx-xxx-' + order.customer.phone.substring(6) : ''}`
+			table(style='width:100%;margin-top:10px')
+				thead
+					tr
+						td(style='width: 40%;border-top: 1px solid #000')
+							small Số lượng
+						td(style='width: 60%;text-align:right;border-top: 1px solid #000')
+							small Thành tiền
+				tbody
+					tr
+						td(style='width: 40%;border: 1px solid #000; border-left:0;border-right: 0;text-align:center;padding: 10px 0')
+							small.number=order.quantity
+						td(style='width: 60%;text-align:right;border: 1px solid #000; border-left:0;border-right:0;padding: 10px 0')
+							small.number=order.total
+					tr
+						td(style='width: 40%')
+							small.number Giảm giá
+						td(style='width: 60%;text-align:right;')
+							small.number=order.discount
+					tr
+						td(style='width: 40%')
+							small.number Tích điểm
+						td(style='width: 60%;text-align:right;')
+							small.number=order.point
+			hr
+			center
+				small Bảo quản nơi khô thoáng.
+			small Cảm ơn quý khách đã sử dụng dịch vụ.
+			center
+				small ***
+				br
+				img(src=qrImg style='width:90%')
+	script(src='/assets/js/core/jquery-3.6.1.slim.js')
+	script(src='/javascripts/function.js')
