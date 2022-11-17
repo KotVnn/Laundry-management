@@ -4,8 +4,16 @@ const Schema = mongoose.Schema;
 const orders = mongoose.model(
   'orders',
   new mongoose.Schema({
-    id: String,
-    quantity: Number,
+    id: {
+      type: String,
+      required: true,
+      sparse: true,
+      unique: true,
+    },
+    quantity: {
+      type: Number,
+      default: 0,
+    },
     status: [
       {
         stt: {
@@ -15,12 +23,27 @@ const orders = mongoose.model(
         time: Date,
       },
     ],
-    date: Date,
-    point: Number,
-    usePoint: Boolean,
+    date: {
+      type: Date,
+      default: new Date().toLocaleString(),
+    },
+    point: {
+      type: Number,
+      default: 0,
+    },
+    usePoint: {
+      type: Boolean,
+      default: false,
+    },
     total: Number,
-    discount: Number,
-    note: String,
+    discount: {
+      type: Number,
+      default: 0,
+    },
+    note: {
+      type: String,
+      default: '',
+    },
     customer: {
       type: Schema.Types.ObjectId,
       ref: 'customers',

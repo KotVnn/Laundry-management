@@ -1,8 +1,9 @@
 extends ../layout
 
 block content
-		.container.mt-5.pt-3
-			.row
-				.col-12.col-sm-8.col-lg-6.col-xl-4.offset-sm-2.offset-lg-3.offset-xl-4
-					include parts/listOrder
-					+elementOrder(orders)
+	.card.my-4
+		.card-header.p-0.position-relative.mt-n4.mx-3.z-index-2
+			.bg-gradient-primary.shadow-primary.border-radius-lg.pt-4.pb-3
+				h6.text-white.text-capitalize.ps-3 Danh sách đơn hàng
+		if orders && orders.length
+			include ../parts/order/list

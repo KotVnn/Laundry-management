@@ -8,9 +8,9 @@ exports.findById = (id) => {
   return Status.findOne({ id });
 };
 
-exports.updateStt = async (id) => {
+exports.updateStt = async (name) => {
   return {
-    stt: await Status.findOne({ id }),
+    stt: await Status.findOne({ name }),
     time: new Date().toLocaleString(),
   };
 };

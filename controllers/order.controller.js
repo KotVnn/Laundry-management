@@ -22,15 +22,18 @@ exports.add = async (order) => {
     id: createOrderId(),
     quantity: order.quantity,
     date: new Date().toLocaleString(),
-    usePoint: order.usePoint,
+    usePoint: order.usePoint === 'on',
     customer: customer._id,
     point: pointCal,
     note: order.note,
     total: order.total < 10000 ? order.total * 1000 : order.total,
-    discount: order.discount ? order.discount * 1000 : 0,
-    status: await sttCon.updateStt(1),
+    discount: order.discount ? order.discount : 0,
+    status: await sttCon.updateStt('Nhận đơn'.toUpperCase()),
   });
   await newOrder.save();
+  if (order.usePoint) {
+    customer.pointUsed += order.discount;
+  }
   customer.orders.unshift(newOrder._id);
   customer.save();
   return Order.findOne({ _id: newOrder._id })
@@ -58,14 +61,21 @@ exports.update = (order) => {
     const oldOrder = await Order.findOne({ id: order.id });
     for (const key in order) {
       if (key.indexOf('status') === -1) {
-        if (key === 'total' || key === 'discount')
-          oldOrder[key] = order[key] * 1000;
-        else oldOrder[key] = order[key];
+        if (key === 'total' || key === 'discount' || key === 'point') {
+          // oldOrder[key] = order[key] * 1000;
+        } else oldOrder[key] = order[key];
       } else {
-        oldOrder[key].push({
-          stt: order.status,
-          time: new Date().toLocaleString(),
-        });
+        if (
+          oldOrder[key].length &&
+          oldOrder[key][oldOrder[key].length - 1].stt
+            .toString()
+            .indexOf(order.status) === -1
+        ) {
+          oldOrder[key].push({
+            stt: order.status,
+            time: new Date().toLocaleString(),
+          });
+        }
       }
     }
     Order.updateOne({ id: order.id }, oldOrder, (err) => {
