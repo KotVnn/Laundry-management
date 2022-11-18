@@ -2,6 +2,7 @@ const Order = require('../models').order;
 const Customer = require('../models').customer;
 const Point = require('../models').point;
 const sttCon = require('./status.controller');
+const cusCon = require('../controllers/customer.controller');
 
 exports.add = async (order) => {
   let customer = await Customer.findOne({ phone: order.phone }).populate(
@@ -64,8 +65,6 @@ exports.update = (order) => {
       if (key.indexOf('status') === -1) {
         if (key === 'total') {
           oldOrder[key] = order[key] * 1000;
-        } else if (key === 'point') {
-          oldOrder[key] = order.total / point.discount;
         } else oldOrder[key] = order[key];
       } else {
         if (
@@ -79,6 +78,14 @@ exports.update = (order) => {
             time: new Date().toLocaleString(),
           });
         }
+      }
+    }
+    if (order.discount) {
+      oldOrder.point = order.total / point.discount;
+      const customer = await cusCon.findCustomer(order.phone);
+      if (customer) {
+        customer.pointUsed = order.discount;
+        await customer.save();
       }
     }
     Order.updateOne({ id: order.id }, oldOrder, (err) => {

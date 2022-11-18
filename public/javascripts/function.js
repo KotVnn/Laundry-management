@@ -1,6 +1,5 @@
 let currentPoint;
-const totalSum = parseInt($('#total').val());
-const discountSum = parseInt($('#discount').val());
+let totalSum = parseInt($('#total').val());
 if ($('#total').val() && parseInt($('#total').val()) > 1) {
   currentPoint = $('#point').val() - $('#total').val() / 10;
 } else {
@@ -10,9 +9,8 @@ $('#total').on('keyup', () => {
   let total = $('#total').val();
   if (!total) total = 0;
   const point = (parseInt(currentPoint) + total / 10).toFixed();
+  totalSum = parseInt(total);
   $('#point').val(point);
-  if (total > 10) $('#usePoint').removeAttr('disabled');
-  else $('#usePoint').attr('disabled', true);
 });
 
 const allTimeText = $('.timeText');
