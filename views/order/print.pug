@@ -46,7 +46,7 @@ body(style='background:transparent;height:589px;margin: 0;')
 						td(style='width: 40%')
 							small.number Giảm giá
 						td(style='width: 60%;text-align:right;')
-							small.number=order.discount
+							small.number=order.discount * 1000
 					tr
 						td(style='width: 40%')
 							small.number Tích điểm
@@ -61,6 +61,7 @@ body(style='background:transparent;height:589px;margin: 0;')
 				small ***
 				br
 				img(src=qrImg style='width:90%')
-	button(onclick='window.print()') IN HÓA ĐƠN
+	center
+		button(onclick='window.print()') IN HÓA ĐƠN
 	script(src='/assets/js/core/jquery-3.6.1.slim.js')
 	script(src='/javascripts/function.js')
