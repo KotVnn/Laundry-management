@@ -47,7 +47,7 @@ $('#usePoint').change(function () {
   if (this.checked) {
     total.val(total.val() - currentPoint);
     discount.val(currentPoint);
-    point.val(0);
+    if (currentPoint > 0) point.val(0);
   } else {
     total.val(parseInt(total.val()) + parseInt(discount.val()));
     discount.val(0);
