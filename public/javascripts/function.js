@@ -40,21 +40,12 @@ for (const num of allNumText) {
   $(num).text(arrText.join(' '));
 }
 
-$('#usePoint').change(function () {
+$('#discount').on('keyup', () => {
   const total = $('#total');
   const point = $('#point');
   const discount = $('#discount');
-  if (currentPoint) {
-    if (this.checked) {
-      total.val(total.val() - currentPoint);
-      discount.val(currentPoint);
-      point.val(0);
-    } else {
-      total.val(parseInt(total.val()) + parseInt(discount.val()));
-      discount.val(0);
-      point.val(currentPoint);
-    }
-  }
+  total.val(total.val() - discount.val());
+  point.val(point.val() - discount.val());
 });
 
 function numberWithCommas(x) {
