@@ -19,7 +19,9 @@ exports.add = async (order) => {
   }
   const point = await Point.findOne();
   const pointCal =
-    order.total < 10000 ? order.total * 1000 : order.total / point.discount;
+    order.total < 10000
+      ? order.total / point.discount
+      : order.total / 1000 / point.discount;
   const newOrder = new Order({
     id: createOrderId(),
     quantity: order.quantity,
