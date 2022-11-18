@@ -44,6 +44,7 @@ $('#discount').on('keyup', () => {
   const total = $('#total');
   const point = $('#point');
   const discount = $('#discount');
+  if (parseInt(discount.val()) > currentPoint) discount.val(currentPoint);
   total.val(totalSum - discount.val());
   point.val(currentPoint - discount.val() + parseInt($('#total').val() / 10));
 });
