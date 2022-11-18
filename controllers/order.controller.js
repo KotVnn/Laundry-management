@@ -87,7 +87,7 @@ exports.update = (order) => {
       oldOrder.point = order.total / point.discount;
       const customer = await cusCon.findCustomer(order.phone);
       if (customer) {
-        customer.pointUsed = order.discount;
+        customer.pointUsed += order.discount;
         await customer.save();
       }
     }
