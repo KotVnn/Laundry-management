@@ -44,14 +44,16 @@ $('#usePoint').change(function () {
   const total = $('#total');
   const point = $('#point');
   const discount = $('#discount');
-  if (this.checked) {
-    total.val(total.val() - currentPoint);
-    discount.val(currentPoint);
-    if (currentPoint > 0) point.val(0);
-  } else {
-    total.val(parseInt(total.val()) + parseInt(discount.val()));
-    discount.val(0);
-    point.val(currentPoint);
+  if (currentPoint) {
+    if (this.checked) {
+      total.val(total.val() - currentPoint);
+      discount.val(currentPoint);
+      point.val(0);
+    } else {
+      total.val(parseInt(total.val()) + parseInt(discount.val()));
+      discount.val(0);
+      point.val(currentPoint);
+    }
   }
 });
 
