@@ -11,13 +11,11 @@ head
 					visibility: visible;
 			}
 		}
-
-body(style='width: 219px;background:transparent')
-	button(onclick='window.print()') IN HÓA ĐƠN
-	div.print-container(style='width: 219px;padding: 10px')
-		div(style='text-align: center')
-			h1(style='margin: 8px 0 0') GIẶT 83
-			small 83 Tô Thị - TP. Lạng Sơn
+body(style='background:transparent;height:589px;margin: 0;')
+	.print-container(style='height:589px;width: 219px;padding: 10px;font-weight: 700;padding-left: 0;')
+		div(style='text-align: center;')
+			h1(style='margin: 0') GIẶT 83
+			small(style='font-size: 16px;') 83 Tô Thị - TP. Lạng Sơn
 			br
 			small SĐT: 0375 806 906
 			br
@@ -28,7 +26,9 @@ body(style='width: 219px;background:transparent')
 			br
 			small=`Khách hàng: ${order.customer.fullName ? order.customer.fullName : 'khách lẻ'}`
 			br
-			small=`SĐT: ${order.customer.phone ? 'xxx-xxx-' + order.customer.phone.substring(6) : ''}`
+			small=`Địa chỉ: ${order.customer.address ? order.customer.address : ''}`
+			br
+			small=`SĐT: ${order.customer.phone ? order.customer.phone : ''}`
 			table(style='width:100%;margin-top:10px')
 				thead
 					tr
@@ -55,10 +55,12 @@ body(style='width: 219px;background:transparent')
 			hr
 			center
 				small Bảo quản nơi khô thoáng.
-			small Cảm ơn quý khách đã sử dụng dịch vụ.
+			center
+				small Cảm ơn quý khách đã sử dụng dịch vụ.
 			center
 				small ***
 				br
-				img(src=qrImg style='width:90%')
+				img(src='' style='width:90%')
+	button(onclick='window.print()') IN HÓA ĐƠN
 	script(src='/assets/js/core/jquery-3.6.1.slim.js')
 	script(src='/javascripts/function.js')
