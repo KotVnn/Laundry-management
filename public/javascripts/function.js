@@ -1,4 +1,6 @@
 let currentPoint;
+const totalSum = parseInt($('#total').val());
+const discountSum = parseInt($('#discount').val());
 if ($('#total').val() && parseInt($('#total').val()) > 1) {
   currentPoint = $('#point').val() - $('#total').val() / 10;
 } else {
@@ -44,8 +46,8 @@ $('#discount').on('keyup', () => {
   const total = $('#total');
   const point = $('#point');
   const discount = $('#discount');
-  total.val(total.val() - discount.val());
-  point.val(point.val() - discount.val());
+  total.val(totalSum - discount.val());
+  point.val(currentPoint - discount.val() + parseInt($('#total').val() / 10));
 });
 
 function numberWithCommas(x) {
