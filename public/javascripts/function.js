@@ -44,7 +44,7 @@ $('#usePoint').change(function () {
   const total = $('#total');
   const point = $('#point');
   const discount = $('#discount');
-  if (currentPoint) {
+  if (currentPoint && currentPoint > 0) {
     if (this.checked) {
       total.val(total.val() - currentPoint);
       discount.val(currentPoint);
