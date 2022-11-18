@@ -23,9 +23,9 @@ mixin detailOrder(order, customer, headText, listStatus)
 				.input-group.input-group-outline.my-3.is-filled
 					label.form-label Điểm thưởng
 					input#point.form-control(type='number' aria-label='Điểm thưởng' name='point' value=`${customer && customer._doc && customer._doc.point ? customer._doc.point : 0}` disabled)
-					if customer && customer._doc && customer._doc.point
-						.input-group-text.form-check.form-switch
-							input#usePoint.form-check-input.mt-0.z-index-1(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' disabled=!order checked=order && order.usePoint)
+					//if customer && customer._doc && customer._doc.point
+					//	.input-group-text.form-check.form-switch
+					//		input#usePoint.form-check-input.mt-0.z-index-1(type='checkbox' aria-label='Dùng điểm thưởng' name='usePoint' disabled=!order checked=order && order.usePoint)
 				.input-group.input-group-outline.my-3.is-filled
 					label.form-label Khuyến mãi x1.000
 					input#discount.form-control(type='number' aria-label='Khuyến mãi' name='discount' value=`${order && order.discount ? order.discount : 0}`)

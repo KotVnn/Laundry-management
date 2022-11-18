@@ -59,10 +59,13 @@ exports.update = (order) => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve) => {
     const oldOrder = await Order.findOne({ id: order.id });
+    const point = await Point.findOne();
     for (const key in order) {
       if (key.indexOf('status') === -1) {
         if (key === 'total') {
           oldOrder[key] = order[key] * 1000;
+        } else if (key === 'point') {
+          oldOrder[key] = order.total / point.discount;
         } else oldOrder[key] = order[key];
       } else {
         if (
