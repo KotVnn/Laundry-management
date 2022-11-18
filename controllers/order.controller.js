@@ -26,17 +26,17 @@ exports.add = async (order) => {
     id: createOrderId(),
     quantity: order.quantity,
     date: new Date().toLocaleString(),
-    usePoint: order.usePoint === 'on',
+    usePoint: !!order.discount,
     customer: customer._id,
-    point: pointCal,
+    point: pointCal.toFixed(),
     note: order.note,
     total: order.total < 10000 ? order.total * 1000 : order.total,
     discount: order.discount ? order.discount : 0,
     status: await sttCon.updateStt('Nhận đơn'.toUpperCase()),
   });
   await newOrder.save();
-  if (order.usePoint) {
-    customer.pointUsed += order.discount;
+  if (order.discount) {
+    customer.pointUsed += parseInt(order.discount);
   }
   customer.orders.unshift(newOrder._id);
   customer.save();
@@ -76,7 +76,7 @@ exports.update = (order) => {
             .toString()
             .indexOf(order.status) === -1
         ) {
-          oldOrder[key].push({
+          oldOrder[key].unshift({
             stt: order.status,
             time: new Date().toLocaleString(),
           });
@@ -84,10 +84,11 @@ exports.update = (order) => {
       }
     }
     if (order.discount) {
-      oldOrder.point = order.total / point.discount;
+      oldOrder.usePoint = true;
+      oldOrder.point = (order.total / point.discount).toFixed();
       const customer = await cusCon.findCustomer(order.phone);
       if (customer) {
-        customer.pointUsed += order.discount;
+        customer.pointUsed += parseInt(order.discount);
         await customer.save();
       }
     }
