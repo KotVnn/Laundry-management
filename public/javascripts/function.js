@@ -1,14 +1,15 @@
 let currentPoint;
+const pointCal = $('#pointCal').val() / 100;
 let totalSum = parseInt($('#total').val());
 if ($('#total').val() && parseInt($('#total').val()) > 1) {
-  currentPoint = $('#point').val() - $('#total').val() / 10;
+  currentPoint = $('#point').val() - $('#total').val() * pointCal;
 } else {
   currentPoint = $('#point').val();
 }
 $('#total').on('keyup', () => {
   let total = $('#total').val();
   if (!total) total = 0;
-  const point = (parseInt(currentPoint) + total / 10).toFixed();
+  const point = (parseInt(currentPoint) + total * pointCal).toFixed();
   totalSum = parseInt(total);
   $('#point').val(point);
 });
@@ -46,7 +47,9 @@ $('#discount').on('keyup', () => {
   const discount = $('#discount');
   if (parseInt(discount.val()) > currentPoint) discount.val(currentPoint);
   total.val(totalSum - discount.val());
-  point.val(currentPoint - discount.val() + parseInt($('#total').val() / 10));
+  point.val(
+    currentPoint - discount.val() + parseInt($('#total').val() * pointCal),
+  );
 });
 
 function numberWithCommas(x) {

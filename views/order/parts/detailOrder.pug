@@ -49,6 +49,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 							.ms-2.me-auto
 								.fw-bold= status.stt.name
 								.timeText= status.time
+	input#pointCal(type='hidden' value= point ? point.discount : 10)
 	include ../../components/modal
 	if order
 		+modal('#' + order.id, 'Bạn có chắc chắn muốn xóa đơn hàng này ?', `/order/delete/${order.id}`)

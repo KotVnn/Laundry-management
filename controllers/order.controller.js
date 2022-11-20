@@ -3,7 +3,6 @@ const Customer = require('../models').customer;
 const Point = require('../models').point;
 const sttCon = require('./status.controller');
 const cusCon = require('../controllers/customer.controller');
-const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.add = async (order) => {
   let customer = await Customer.findOne({ phone: order.phone }).populate(
@@ -21,8 +20,8 @@ exports.add = async (order) => {
   const point = await Point.findOne();
   const pointCal =
     order.total < 10000
-      ? order.total / point.discount
-      : order.total / 1000 / point.discount;
+      ? (order.total * point.discount) / 100
+      : (order.total / 100000) * point.discount;
   const newOrder = new Order({
     id: createOrderId(),
     quantity: order.quantity,
@@ -84,7 +83,7 @@ exports.update = (order) => {
     }
     if (order.discount) {
       oldOrder.usePoint = true;
-      oldOrder.point = (order.total / point.discount).toFixed();
+      oldOrder.point = ((order.total / 100) * point.discount).toFixed();
       const customer = await cusCon.findCustomer(order.phone);
       if (customer) {
         customer.pointUsed += parseInt(order.discount);

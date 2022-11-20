@@ -182,14 +182,13 @@ router.get('/order/:id', async (req, res) => {
   ) {
     return res.redirect('/');
   }
-  const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  const customer = await cusCon.findCustomer(order.customer.phone);
   return res.render('order/detail', {
     order,
     user: req.user,
-    customer,
-    listStatus,
+    customer: await cusCon.findCustomer(order.customer.phone),
+    listStatus: await sttCon.findAll(),
+    point: await Point.findOne(),
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
     active: 3,
@@ -271,6 +270,7 @@ router.post('/order/create', async (req, res) => {
     title,
     user: req.user,
     customer,
+    point: await Point.findOne(),
     moduleName: 'Tạo đơn hàng mới',
     active: 3,
   });
