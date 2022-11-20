@@ -154,11 +154,11 @@ router.get('/customer/:phone', async (req, res) => {
 });
 
 router.get('/order', async (req, res) => {
-  const orders = await orderCon.findAll();
+  const dashboard = await orderCon.mainOrder();
   return res.render('order/index', {
     title,
     user: req.user,
-    orders,
+    dashboard,
     moduleName: 'Đơn hàng',
     active: 3,
   });
@@ -182,16 +182,32 @@ router.get('/order/:id', async (req, res) => {
   ) {
     return res.redirect('/');
   }
-  const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
-  const customer = await cusCon.findCustomer(order.customer.phone);
   return res.render('order/detail', {
     order,
     user: req.user,
-    customer,
-    listStatus,
+    customer: await cusCon.findCustomer(order.customer.phone),
+    listStatus: await sttCon.findAll(),
+    point: await Point.findOne(),
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
+    active: 3,
+  });
+});
+
+router.get('/order/status/:id', async (req, res) => {
+  if (!req.params || !req.params.id || !req.params.id.match(/\d/g)) {
+    return res.redirect('/');
+  }
+  const orders = await orderCon.findByStatus(req.params.id);
+  if (!orders) {
+    return res.redirect('/order');
+  }
+  return res.render('order/index', {
+    title,
+    user: req.user,
+    orders,
+    moduleName: 'Đơn hàng',
     active: 3,
   });
 });
@@ -254,6 +270,7 @@ router.post('/order/create', async (req, res) => {
     title,
     user: req.user,
     customer,
+    point: await Point.findOne(),
     moduleName: 'Tạo đơn hàng mới',
     active: 3,
   });

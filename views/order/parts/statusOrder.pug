@@ -1,0 +1,12 @@
+mixin catStatus(sum)
+	.col-md-2.col-6.my-3
+		a(href='/order/status/' + sum.id)
+			.card
+				.card-header.mx-4.p-3.text-center
+					.icon.icon-shape.icon-lg.shadow.text-center.border-radius-lg(class=`${sum.id > 8 ? 'bg-gradient-success' : sum.id >= 6 ? 'bg-gradient-primary' : sum.id >= 3 ? 'bg-gradient-warning' : 'bg-gradient-danger'}`)
+						i.material-icons.opacity-10=sum.class
+				.card-body.pt-0.p-3.text-center
+					h6.text-center.mb-0=sum.name
+					span.text-xs=`ID: ${sum.id}`
+					hr.horizontal.dark.my-3
+					h5.mb-0=`${sum.count} đơn`

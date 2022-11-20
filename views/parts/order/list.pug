@@ -9,29 +9,29 @@
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.text-center.opacity-7.ps-2 Hoàn thành
 					th
 			tbody
-				each order in orders
+				each order in orders ? orders : dashboard && dashboard.orders ? dashboard.orders : []
 					tr
 						td
 							a(href='/order/' + order.id)
 								.d-flex.px-2.py-1
 									div
-										img.avatar.avatar-sm.me-3.border-radius-lg(src='../assets/img/no-avatar.png' alt=order.customer.fullName)
+										img.avatar.avatar-sm.me-3.border-radius-lg(src='/assets/img/no-avatar.png' alt=order.customer.fullName)
 									.d-flex.flex-column.justify-content-center
 										h6.mb-0.text-sm=order.customer.fullName
 										p.text-xs.text-secondary.mb-0=`${order.customer.address}/${order.customer.phone}`
 						td
 							a(href='/order/' + order.id)
 								p.number.text-sm.font-weight-bold.mb-0=order.total
-								p.text-xs.text-secondary.mb-0.timeText=order.status[order.status.length - 1].time
+								p.text-xs.text-secondary.mb-0.timeText=order.status[0].time
 						td
 							a(href='/order/' + order.id)
-								span.text-xs.font-weight-bold=order.status[order.status.length - 1].stt.name
+								span.text-xs.font-weight-bold=order.status[0].stt.name
 						td.align-middle.text-center
 							.d-flex.align-items-center.justify-content-center
-								span.me-2.text-xs.font-weight-bold=order.status[order.status.length - 1].stt.id * 10 + '%'
+								span.me-2.text-xs.font-weight-bold=order.status[0].stt.id * 10 + '%'
 								div
 									.progress
-										.progress-bar(class=`${order.status[order.status.length - 1].stt.id * 10 < 50 ? 'bg-gradient-danger' : order.status[order.status.length - 1].stt.id * 10 < 80 ? 'bg-gradient-info' : 'bg-gradient-success'}` role='progressbar' aria-valuenow=order.status[order.status.length - 1].stt.id * 10 aria-valuemin='0' aria-valuemax='100' style=`width: ${order.status[order.status.length - 1].stt.id * 10}%;`)
+										.progress-bar(class=`${order.status[0].stt.id < 5 ? 'bg-gradient-danger' : order.status[0].stt.id < 8 ? 'bg-gradient-info' : 'bg-gradient-success'}` role='progressbar' aria-valuenow=order.status[0].stt.id * 10 aria-valuemin='0' aria-valuemax='100' style=`width: ${order.status[0].stt.id * 10}%;`)
 						td.align-middle
 							button.btn.btn-link.text-secondary.mb-0
 								i.fa.fa-ellipsis-v.text-xs
