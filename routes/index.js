@@ -154,11 +154,11 @@ router.get('/customer/:phone', async (req, res) => {
 });
 
 router.get('/order', async (req, res) => {
-  const orders = await orderCon.findAll();
+  const dashboard = await orderCon.mainOrder();
   return res.render('order/index', {
     title,
     user: req.user,
-    orders,
+    dashboard,
     moduleName: 'Đơn hàng',
     active: 3,
   });
@@ -192,6 +192,23 @@ router.get('/order/:id', async (req, res) => {
     listStatus,
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
+    active: 3,
+  });
+});
+
+router.get('/order/status/:id', async (req, res) => {
+  if (!req.params || !req.params.id || !req.params.id.match(/\d/g)) {
+    return res.redirect('/');
+  }
+  const orders = await orderCon.findByStatus(req.params.id);
+  if (!orders) {
+    return res.redirect('/order');
+  }
+  return res.render('order/index', {
+    title,
+    user: req.user,
+    orders,
+    moduleName: 'Đơn hàng',
     active: 3,
   });
 });

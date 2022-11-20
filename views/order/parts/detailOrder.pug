@@ -35,7 +35,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 			if order && order.status && order.status.length && listStatus && listStatus.length
 				select.form-select.p-2(arial-label='Trạng thái' name='status')
 					each el in listStatus
-						option(selected=order.status[order.status.length - 1].stt.id === el.id value=el._id)= el.name
+						option(selected=order.status[0].stt.id === el.id value=el._id)= el.name
 			.input-group.input-group-outline.my-3(class=`${order && order.note ? 'is-filled' : ''}`)
 				label.form-label Ghi chú
 				textarea.form-control(aria-label='Ghi chú' name='note')= order && order.note ? order.note : ''
@@ -44,7 +44,7 @@ mixin detailOrder(order, customer, headText, listStatus)
 					button.btn.btn-primary.me-md-2(type='submit') Tạo đơn hàng
 			if order && order.status && order.status.length
 				ol.list-group.list-group-numbered
-					each status, i in order.status.reverse()
+					each status, i in order.status
 						li.list-group-item.d-flex.justify-content-between.align-items-start(class=`${i === 0 ? 'active' : ''}`)
 							.ms-2.me-auto
 								.fw-bold= status.stt.name

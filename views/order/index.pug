@@ -1,9 +1,13 @@
 extends ../layout
 
 block content
+	if dashboard && dashboard.sum && dashboard.sum.length
+		include ../order/parts/statusOrder
+		each sum in dashboard.sum
+			+catStatus(sum)
 	.card.my-4
 		.card-header.p-0.position-relative.mt-n4.mx-3.z-index-2
 			.bg-gradient-primary.shadow-primary.border-radius-lg.pt-4.pb-3
 				h6.text-white.text-capitalize.ps-3 Danh sách đơn hàng
-		if orders && orders.length
+		if (dashboard && dashboard.orders && dashboard.orders.length) || (orders && orders.length)
 			include ../parts/order/list
