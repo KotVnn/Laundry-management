@@ -21,7 +21,7 @@ const meta = {
 };
 
 router.get('/login', async (req, res) => {
-  if (req.isAuthenticated()) return res.redirect('/');
+  if (req.isAuthenticated()) return res.redirect('/man');
   const messages = req.flash('error');
   return res.render('login', {
     title,
@@ -33,7 +33,7 @@ router.get('/login', async (req, res) => {
 });
 
 router.get('/signup', async (req, res) => {
-  if (req.isAuthenticated()) return res.redirect('/');
+  if (req.isAuthenticated()) return res.redirect('/man');
   const messages = req.flash('error');
   return res.render('signup', {
     title,
@@ -275,7 +275,7 @@ router.post('/order/create', async (req, res) => {
     req.body.phone.length < 10 ||
     !req.body.phone.match(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
   ) {
-    return res.redirect('/');
+    return res.redirect('/man');
   }
   const phone = req.body.phone.replace(/ .'",-\(\)\+/g, '');
   let customer = await cusCon.findCustomer(phone);
