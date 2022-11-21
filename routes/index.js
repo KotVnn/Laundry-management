@@ -10,12 +10,22 @@ const auth = require('../middlewares/validator');
 const Point = require('../models').point;
 const Status = require('../models').status;
 const title = 'Giặt là 83';
+const meta = {
+  description:
+    'Giặt chăn Lạng Sơn, dịch vụ giặt là Lạng Sơn, dịch vụ giặt là lấy ngay',
+  robots: 'max-snippet:-1, max-image-preview:large, max-video-preview:-1',
+  locale: 'vi_VN',
+  type: 'website',
+  url: 'https://giatchanlangson.com',
+  siteName: 'Giặt là 83',
+};
 
 router.get('/login', async (req, res) => {
-  if (req.isAuthenticated()) return res.redirect('/');
+  if (req.isAuthenticated()) return res.redirect('/man');
   const messages = req.flash('error');
   return res.render('login', {
     title,
+    meta,
     messages,
     hasErrors: messages.length > 0,
     returnUrl: req.query && req.query.returnUrl ? req.query.returnUrl : null,
@@ -23,10 +33,11 @@ router.get('/login', async (req, res) => {
 });
 
 router.get('/signup', async (req, res) => {
-  if (req.isAuthenticated()) return res.redirect('/');
+  if (req.isAuthenticated()) return res.redirect('/man');
   const messages = req.flash('error');
   return res.render('signup', {
     title,
+    meta,
     messages,
     hasErrors: messages.length > 0,
   });
@@ -71,6 +82,7 @@ router.get('/hd/:id', async (req, res) => {
   }
   return res.render('order/customer', {
     title,
+    meta,
     id: req.params.id,
   });
 });
@@ -89,6 +101,7 @@ router.post('/hd/:id', async (req, res) => {
   if (order && customer) {
     return res.render('order/customer', {
       title: title + ' - Chi tiết đơn hàng #' + order.id,
+      meta,
       order,
       customer,
       id: req.params.id,
@@ -108,10 +121,17 @@ router.get('/profile', async (req, res) => {
   else return res.redirect('/login');
 });
 
+router.get('/', async (req, res) => {
+  res.render('index', {
+    title,
+    meta,
+  });
+});
+
 // router.use(auth.admin);
 
 /* GET home page. */
-router.get('/', async (req, res) => {
+router.get('/man', async (req, res) => {
   res.render('index', {
     title,
     user: req.user,
@@ -255,7 +275,7 @@ router.post('/order/create', async (req, res) => {
     req.body.phone.length < 10 ||
     !req.body.phone.match(/(84|0[3|5|7|8|9])+([0-9]{8})\b/g)
   ) {
-    return res.redirect('/');
+    return res.redirect('/man');
   }
   const phone = req.body.phone.replace(/ .'",-\(\)\+/g, '');
   let customer = await cusCon.findCustomer(phone);

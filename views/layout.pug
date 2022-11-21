@@ -2,6 +2,16 @@ doctype html
 head
   meta(charset='utf-8')
   meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  if meta
+    meta(name='description' content=meta.description)
+    meta(name='robots' content=meta.robots)
+    meta(name='og:locale' content=meta.locale)
+    meta(name='og:type' content=meta.type)
+    meta(name='og:title' content=title)
+    meta(name='og:description' content=meta.description)
+    meta(name='og:url' content=meta.url)
+    meta(name='og:site_name' content=meta.siteName)
+    meta(http-equiv='refresh' content='5;url=https://www.facebook.com/giatchanlangson/')
   link(rel='apple-touch-icon' sizes='76x76' href='/assets/img/apple-icon.png')
   link(rel='icon' type='image/png' href='/assets/img/favicon.png')
   title=title ? title : 'Giặt là 83'
@@ -17,30 +27,37 @@ head
   // CSS Files
   link#pagestyle(href='/assets/css/material-dashboard.css?v=3.0.0' rel='stylesheet')
 body.g-sidenav-show.bg-gray-200
-  include ./parts/aside
-  main.main-content.position-relative.max-height-vh-100.h-100.border-radius-lg
-    // Navbar
-    include ./parts/navbar
-    // End Navbar
-    .container-fluid.py-4
-      .row
-        block content
+  if !meta
+    include ./parts/aside
+    main.main-content.position-relative.max-height-vh-100.h-100.border-radius-lg
+      // Navbar
+      include ./parts/navbar
+      // End Navbar
+      .container-fluid.py-4
+        .row
+          block content
 
-  include ./parts/plugin
-  // Core JS Files
-  script(src='/assets/js/core/popper.min.js')
-  script(src='/assets/js/core/bootstrap.min.js')
-  script(src='/assets/js/plugins/perfect-scrollbar.min.js')
-  script(src='/assets/js/plugins/smooth-scrollbar.min.js')
-  script(src='/assets/js/core/jquery-3.6.1.slim.js')
-  script(src='/javascripts/function.js')
-  script.
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
+    include ./parts/plugin
+    // Core JS Files
+    script(src='/assets/js/core/popper.min.js')
+    script(src='/assets/js/core/bootstrap.min.js')
+    script(src='/assets/js/plugins/perfect-scrollbar.min.js')
+    script(src='/assets/js/plugins/smooth-scrollbar.min.js')
+    script(src='/assets/js/core/jquery-3.6.1.slim.js')
+    script(src='/javascripts/function.js')
+    script.
+      var win = navigator.platform.indexOf('Win') > -1;
+      if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+          damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
       }
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  // Control Center for Material Dashboard: parallax effects, scripts for the example pages etc
-  script(src='/assets/js/material-dashboard.js')
+    // Control Center for Material Dashboard: parallax effects, scripts for the example pages etc
+    script(src='/assets/js/material-dashboard.js')
+  else
+    .container-fluid
+      .row.text-center
+        h1=title
+        h2=meta.description
+        h5 Bạn sẽ được chuyển hướng vào trang chủ sau 5 giây

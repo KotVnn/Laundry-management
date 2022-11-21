@@ -11,7 +11,7 @@ exports.add = async (order) => {
   if (!customer) {
     customer = new Customer({
       fullName: order.fullName,
-      phone: order.phone,
+      phone: order.phone.replace(/[-. +]/g, ''),
       pointUsed: 0,
       address: order.address,
     });
@@ -38,6 +38,7 @@ exports.add = async (order) => {
   if (order.discount) {
     customer.pointUsed += parseInt(order.discount);
   }
+  customer.phone = customer.phone.replace(/[-. +]/g, '');
   customer.orders.unshift(newOrder._id);
   customer.save();
   return Order.findOne({ _id: newOrder._id })
