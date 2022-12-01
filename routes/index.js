@@ -152,6 +152,8 @@ router.get('/customer', async (req, res) => {
   else return res.status(500);
 });
 
+router.post('/customer/update', cusCon.update);
+
 router.get('/customer/:phone', async (req, res) => {
   if (
     !req.params ||

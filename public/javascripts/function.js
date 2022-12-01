@@ -52,6 +52,15 @@ $('#discount').on('keyup', () => {
   );
 });
 
+$('#phone').bind('paste', () => {
+  $('#phone').val(
+    $('#phone')
+      .val()
+      .replace(/[ .+:?\\/*!@#$%^&()-]/g, '')
+      .trim(),
+  );
+});
+
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }

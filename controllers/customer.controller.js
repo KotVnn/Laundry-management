@@ -60,3 +60,13 @@ exports.findAll = (query) => {
       });
   });
 };
+
+exports.update = async (req, res) => {
+  const cusUpdate = {
+    fullName: req.body.fullName,
+    phone: req.body.phone,
+    address: req.body.address,
+  };
+  await Customer.findOneAndUpdate({ _id: req.body.id }, cusUpdate);
+  return res.redirect('/customer/' + cusUpdate.phone);
+};
