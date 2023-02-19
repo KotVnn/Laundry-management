@@ -32,6 +32,15 @@ router.get('/login', async (req, res) => {
   });
 });
 
+router.post(
+  '/login',
+  passport.authenticate('local.signin', {
+    successRedirect: '/profile',
+    failureRedirect: '/login',
+    failureFlash: true,
+  }),
+);
+
 router.get('/signup', async (req, res) => {
   if (req.isAuthenticated()) return res.redirect('/man');
   const messages = req.flash('error');
