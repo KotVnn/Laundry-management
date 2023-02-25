@@ -6,6 +6,7 @@
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7 Tên/địa chỉ/SĐT
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Tổng tiền
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Trạng thái
+					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Ghi chú
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.text-center.opacity-7.ps-2 Hoàn thành
 					th
 			tbody
@@ -26,6 +27,9 @@
 						td
 							a(href='/order/' + order.id)
 								span.text-xs.font-weight-bold=order.status[0].stt.name
+						td
+							a(href='/order/' + order.id)
+								span.text-xs.font-weight-bold=order.note
 						td.align-middle.text-center
 							.d-flex.align-items-center.justify-content-center
 								span.me-2.text-xs.font-weight-bold=order.status[0].stt.id * 10 + '%'
