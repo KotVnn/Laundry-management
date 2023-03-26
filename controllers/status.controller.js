@@ -1,7 +1,7 @@
 const Status = require('../models').status;
 
 exports.findAll = () => {
-  return Status.find();
+  return Status.find().sort({id: 1});
 };
 
 exports.findById = (id) => {
