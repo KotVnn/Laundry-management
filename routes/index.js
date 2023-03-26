@@ -100,12 +100,14 @@ router.post('/hd/:id', async (req, res) => {
   if (
     !req.params ||
     !req.params.id ||
+    !req.body.phone ||
     req.params.id.length < 10 ||
     !req.params.id.match(/\d/g)
   ) {
     return res.redirect('/');
   }
   const order = await orderCon.findById(req.params.id);
+  if (order.customer.phone !== req.body.phone) return res.redirect('/');
   const customer = await cusCon.findCustomer(order.customer.phone);
   if (order && customer) {
     return res.render('order/customer', {
