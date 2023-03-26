@@ -6,6 +6,7 @@
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7 Tên/địa chỉ/SĐT
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Tổng tiền
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Trạng thái
+					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Số lượng
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.opacity-7.ps-2 Ghi chú
 					th.text-uppercase.text-secondary.text-xxs.font-weight-bolder.text-center.opacity-7.ps-2 Hoàn thành
 					th
@@ -27,6 +28,9 @@
 						td
 							a(href='/order/' + order.id)
 								span.text-xs.font-weight-bold=order.status[0].stt.name
+						td
+							a(href='/order/' + order.id)
+								span.text-xs.font-weight-bold=order.quantity ? order.quantity : 0
 						td
 							a(href='/order/' + order.id)
 								span.text-xs.font-weight-bold=order.note
