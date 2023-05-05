@@ -36,7 +36,7 @@ exports.findAll = (query) => {
   return new Promise((resolve) => {
     Customer.find(query || {})
       .sort({ _id: -1 })
-      .limit(30)
+      .limit(100)
       .populate('orders')
       .exec((err, rs) => {
         if (err) {

@@ -117,7 +117,7 @@ exports.mainOrder = () => {
           .sort({ _id: -1 })
           .populate('customer')
           .populate('status.stt')
-          .limit(30),
+          .limit(100),
       );
     }),
     new Promise((resolve) => {
