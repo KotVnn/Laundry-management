@@ -147,7 +147,7 @@ exports.findByStatus = async (sttId) => {
   return Order.find({ 'status.0.stt': stt._id })
     .populate('customer')
     .populate('status.stt')
-    .limit(50);
+    .limit(150);
 };
 
 exports.findAll = (query) => {
@@ -155,7 +155,7 @@ exports.findAll = (query) => {
     .sort({ _id: -1 })
     .populate('customer')
     .populate('status.stt')
-    .limit(30);
+    .limit(150);
 };
 
 exports.findById = (id) => {
