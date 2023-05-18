@@ -3,6 +3,7 @@ const Customer = require('../models').customer;
 const Point = require('../models').point;
 const sttCon = require('./status.controller');
 const cusCon = require('../controllers/customer.controller');
+const limit = 250;
 
 exports.add = async (order) => {
   let customer = await Customer.findOne({ phone: order.phone }).populate(
@@ -117,7 +118,7 @@ exports.mainOrder = () => {
           .sort({ _id: -1 })
           .populate('customer')
           .populate('status.stt')
-          .limit(100),
+          .limit(limit),
       );
     }),
     new Promise((resolve) => {
@@ -145,9 +146,10 @@ exports.findByStatus = async (sttId) => {
   const stt = await sttCon.findById(sttId);
   if (!stt) return false;
   return Order.find({ 'status.0.stt': stt._id })
+    .sort({ _id: -1 })
     .populate('customer')
     .populate('status.stt')
-    .limit(150);
+    .limit(limit);
 };
 
 exports.findAll = (query) => {
@@ -155,7 +157,7 @@ exports.findAll = (query) => {
     .sort({ _id: -1 })
     .populate('customer')
     .populate('status.stt')
-    .limit(150);
+    .limit(limit);
 };
 
 exports.findById = (id) => {
