@@ -20,7 +20,8 @@ mixin elementOrder(orders)
 									if (order.customer && order.customer.phone) || (customer && customer.phone)
 										i.ml-2=order.customer.phone ? ` - ${order.customer.phone}` : ` - ${customer.phone}`
 								p.inline
-									span.mr-1 Nhận:
+									span Nhận:
 									small.text-muted.timeText= order.status[order.status.length - 1].time
-									span.my-1 Update:
+								p.inline
+									span Cập nhập lúc:
 									small.text-muted.timeText= order.status[0].time
