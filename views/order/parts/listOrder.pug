@@ -19,9 +19,9 @@ mixin elementOrder(orders)
 								p.mb-1=order.status[0].stt.name
 									if (order.customer && order.customer.phone) || (customer && customer.phone)
 										i.ml-2=order.customer.phone ? ` - ${order.customer.phone}` : ` - ${customer.phone}`
-								p.inline
+								p.inline.my-0
 									span Nhận:
 									small.text-muted.timeText= order.status[order.status.length - 1].time
-								p.inline
+								p.inline.my-0
 									span Cập nhập lúc:
 									small.text-muted.timeText= order.status[0].time
