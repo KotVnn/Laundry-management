@@ -16,7 +16,7 @@ mixin elementOrder(orders)
 											span.badge.bg-success.rounded-pill.mx-1= `${order.point} điểm`
 										span.badge.bg-primary.rounded-pill.mx-1= `${order.quantity} chiếc`
 							if order.status && order.status.length
-								p.mb-1=order.status[order.status.length - 1].stt.name
+								p.mb-1=order.status[0].stt.name
 									if (order.customer && order.customer.phone) || (customer && customer.phone)
 										i.ml-2=order.customer.phone ? ` - ${order.customer.phone}` : ` - ${customer.phone}`
-								small.text-muted.timeText= order.status[order.status.length - 1].time
+								small.text-muted.timeText= `Nhận: ${order.status[order.status.length - 1].time}/Update: ${order.status[0].time}`
