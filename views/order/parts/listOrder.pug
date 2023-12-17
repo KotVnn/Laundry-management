@@ -19,4 +19,8 @@ mixin elementOrder(orders)
 								p.mb-1=order.status[0].stt.name
 									if (order.customer && order.customer.phone) || (customer && customer.phone)
 										i.ml-2=order.customer.phone ? ` - ${order.customer.phone}` : ` - ${customer.phone}`
-								small.text-muted.timeText= `Nhận: ${order.status[order.status.length - 1].time}/Update: ${order.status[0].time}`
+								p.inline
+									small.text-muted.timeText= order.status[order.status.length - 1].time
+										| Nhận
+									small.text-muted.timeText= order.status[0].time
+										| Update
