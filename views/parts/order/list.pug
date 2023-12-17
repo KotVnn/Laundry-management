@@ -17,7 +17,8 @@
 							a(href='/order/' + order.id)
 								.d-flex.px-2.py-1
 									div
-										img.avatar.avatar-sm.me-3.border-radius-lg(src='/assets/img/no-avatar.png' alt=order.customer.fullName)
+										a(href=`/customer/${order.customer.phone}`)
+											img.avatar.avatar-sm.me-3.border-radius-lg(src='/assets/img/no-avatar.png' alt=order.customer.fullName)
 									.d-flex.flex-column.justify-content-center
 										h6.mb-0.text-sm=order.customer.fullName
 										p.text-xs.text-secondary.mb-0=`${order.customer.address}/${order.customer.phone}`
