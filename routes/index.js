@@ -263,35 +263,6 @@ router.get('/order/print/:id', async (req, res) => {
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
   const customer = await cusCon.findCustomer(order.customer.phone);
-  const vietQrToken = await getReq(
-    'https://vietqr.net/portal-service/api/data/generate',
-  );
-  let qrImg;
-  if (vietQrToken && vietQrToken.code === '00') {
-    const enCrypt = cryptoUtils.cryptojs_AES_encrypt(
-      {
-        accountName: 'HOANG DUC TOAN',
-        accountNo: 'MS00T01255128491664',
-        acqId: '970407',
-        addInfo: `${order.id}`,
-        amount: order.total,
-      },
-      vietQrToken.data,
-    );
-    const resultFromVietQr = await postReq(enCrypt, vietQrToken.data);
-    const qr = cryptoUtils.cryptojs_AES_decrypt(
-      resultFromVietQr.data,
-      vietQrToken.data,
-    );
-    if (qr && qr.qrBase64) {
-      const rs = await readQRCodeFromBase64(qr.qrBase64);
-      qrImg = await QRCode.toDataURL(rs);
-    } else {
-      qrImg = await QRCode.toDataURL(
-        `https://${req.headers.host}/hd/${order.id}`,
-      );
-    }
-  }
   return res.render('order/print', {
     order,
     user: req.user,
@@ -299,7 +270,6 @@ router.get('/order/print/:id', async (req, res) => {
     listStatus,
     moduleName: 'Chi tiết đơn hàng #' + order.id,
     title: title + ' - Chi tiết đơn hàng #' + order.id,
-    qrImg,
     active: 3,
   });
 });
