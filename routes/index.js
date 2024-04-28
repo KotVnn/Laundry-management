@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const QRCode = require('qrcode');
 const cusCon = require('../controllers/customer.controller');
 const orderCon = require('../controllers/order.controller');
 const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
 const passport = require('passport');
 const auth = require('../middlewares/validator');
-const {
-  getReq,
-  postReq,
-  cryptoUtils,
-  readQRCodeFromBase64,
-} = require('../helpers/request');
 const Point = require('../models').point;
 const Status = require('../models').status;
 const title = 'Giặt là 83';
