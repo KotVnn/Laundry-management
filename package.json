@@ -7,24 +7,31 @@
     "dev": "nodemon ./bin/www -e js,pug,www,css"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.20.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
+    "crypto-js": "^4.2.0",
     "debug": "~2.6.9",
     "device-detector-js": "^3.0.3",
     "dotenv": "^16.0.3",
     "express": "~4.16.1",
     "express-session": "^1.17.3",
     "express-validator": "^6.14.2",
+    "form-data": "^4.0.0",
     "http-errors": "~1.6.3",
+    "jimp": "^0.22.12",
     "md5": "^2.3.0",
     "mongoose": "^6.7.1",
     "morgan": "~1.9.1",
+    "nodemon": "^3.1.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
-    "qrcode": "^1.5.1"
+    "qrcode": "^1.5.1",
+    "qrcode-reader": "^1.0.4",
+    "qs": "^6.12.1"
   },
   "devDependencies": {
     "eslint": "^8.26.0",

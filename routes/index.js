@@ -7,6 +7,12 @@ const sttCon = require('../controllers/status.controller');
 const searchCon = require('../controllers/search.controller');
 const passport = require('passport');
 const auth = require('../middlewares/validator');
+const {
+  getReq,
+  postReq,
+  cryptoUtils,
+  readQRCodeFromBase64,
+} = require('../helpers/request');
 const Point = require('../models').point;
 const Status = require('../models').status;
 const title = 'Giặt là 83';
@@ -257,9 +263,35 @@ router.get('/order/print/:id', async (req, res) => {
   const listStatus = await sttCon.findAll();
   const order = await orderCon.findById(req.params.id);
   const customer = await cusCon.findCustomer(order.customer.phone);
-  const qrImg = await QRCode.toDataURL(
-    `https://${req.headers.host}/hd/${order.id}`,
+  const vietQrToken = await getReq(
+    'https://vietqr.net/portal-service/api/data/generate',
   );
+  let qrImg;
+  if (vietQrToken && vietQrToken.code === '00') {
+    const enCrypt = cryptoUtils.cryptojs_AES_encrypt(
+      {
+        accountName: 'HOANG DUC TOAN',
+        accountNo: 'MS00T01255128491664',
+        acqId: '970407',
+        addInfo: `${order.id}`,
+        amount: order.total,
+      },
+      vietQrToken.data,
+    );
+    const resultFromVietQr = await postReq(enCrypt, vietQrToken.data);
+    const qr = cryptoUtils.cryptojs_AES_decrypt(
+      resultFromVietQr.data,
+      vietQrToken.data,
+    );
+    if (qr && qr.qrBase64) {
+      const rs = await readQRCodeFromBase64(qr.qrBase64);
+      qrImg = await QRCode.toDataURL(rs);
+    } else {
+      qrImg = await QRCode.toDataURL(
+        `https://${req.headers.host}/hd/${order.id}`,
+      );
+    }
+  }
   return res.render('order/print', {
     order,
     user: req.user,
