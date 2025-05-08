@@ -1,0 +1,47 @@
+stages:
+  - build
+  - deploy
+
+.build:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - name: docker:dind
+      alias: thedockerhost
+  variables:
+    DOCKER_HOST: tcp://thedockerhost:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin
+  script:
+    - cp $ENV_PRODUCTION .env.production
+    - docker build -t $IMAGE_V6 .
+    - docker push $IMAGE_V6
+
+# Job build-dev cho nhánh dev
+build:
+  extends: .build
+  only:
+    refs:
+      - master-v6
+
+.deploy:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@$GT_HOST "
+      echo "$DOCKER_REGISTRY_PASS" | docker login $DOCKER_REGISTRY --username $DOCKER_REGISTRY_USER --password-stdin &&
+      docker stop $CONTAINER_NAME_V6 || true &&
+      docker rm $CONTAINER_NAME_V6 || true &&
+      docker image rm $IMAGE_V6 || true &&
+      docker pull $IMAGE_V6 &&
+      docker run -d --name $CONTAINER_NAME_V6 --restart=always --network internal_network $IMAGE_V6"
+
+# Job deploy cho nhánh main
+deploy:
+  extends: .deploy
+  only:
+    refs:
+      - master-v6
