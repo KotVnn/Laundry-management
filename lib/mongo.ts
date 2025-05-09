@@ -16,13 +16,13 @@ if (!cached) {
 }
 
 async function dbConnect() {
-	console.log("Connecting to MongoDB...", uri);
 	if (cached) {
 		if (cached.conn) {
 			return cached.conn;
 		}
 
 		if (!cached.promise) {
+			console.log("Connecting to MongoDB...", uri);
 			cached.promise = mongoose.connect(uri).then((mongoose) => {
 				return mongoose;
 			});
