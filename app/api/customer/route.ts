@@ -1,13 +1,12 @@
 import '@/lib/init';
-import Customer from '@/models/customer.model'
+import Customer from '@/models/customer.model';
 
 export async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const phone = query.get('phone');
-  const customer = await Customer.findOne({ phone }, {_id: 0, __v: 0})
-    .lean();
+  const customer = await Customer.findOne({ phone }, { _id: 0, __v: 0 }).lean();
   if (!customer) {
-    return new Response(JSON.stringify({ error: "Customer not found" }), {
+    return new Response(JSON.stringify({ error: 'Customer not found' }), {
       status: 404,
     });
   }

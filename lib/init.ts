@@ -1,5 +1,5 @@
-import dbConnect from "@/lib/mongo";
+import dbConnect from '@/lib/mongo';
 
 (async () => {
-	await dbConnect();
+  await dbConnect();
 })();

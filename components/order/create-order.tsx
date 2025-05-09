@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { OrderDetailComp } from '@/components/order/order-detail';
 import { Label } from '@/components/ui/label';
@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 
 export default function CreateOrder() {
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('');
   return (
     <>
       <h2 className="text-xl font-semibold text-center">Tạo đơn giặt mới</h2>
@@ -18,5 +18,5 @@ export default function CreateOrder() {
 
       <OrderDetailComp obj={{ phone }} />
     </>
-  )
+  );
 }
