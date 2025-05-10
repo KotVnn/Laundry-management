@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { API_URL } from '@/lib/utils';
 
 export function OrderDetailComp({ obj }: { obj: { phone?: string; orderId?: string } }) {
   const [customer, setCustomer] = useState<ICustomer>();
@@ -26,7 +27,7 @@ export function OrderDetailComp({ obj }: { obj: { phone?: string; orderId?: stri
           toast.error(err.message);
         });
     } else if (obj.orderId) {
-      GET_METHOD(`/api/order/${obj.orderId}`)
+      GET_METHOD(`${API_URL}/order/detail/${obj.orderId}`)
         .then((ord: IOrder) => {
           setOrder(ord);
           setCustomer(ord.customer);
@@ -40,7 +41,9 @@ export function OrderDetailComp({ obj }: { obj: { phone?: string; orderId?: stri
   return (
     <Sheet>
       <SheetTrigger>
-        <Button type="submit">{obj.orderId ? `Xem đơn ${obj.orderId}` : 'Tạo đơn mới'}</Button>
+        <div className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 cursor-pointer transition">
+          {obj.orderId ? `Xem đơn ${obj.orderId}` : 'Tạo đơn mới'}
+        </div>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

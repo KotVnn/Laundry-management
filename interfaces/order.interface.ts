@@ -1,8 +1,7 @@
 import { ICustomer } from '@/interfaces/customer.interface';
 import { IStatus } from '@/interfaces/status.interface';
 
-export interface IOrderStatus {
-  stt: IStatus;
+export interface IOrderStatus extends IStatus {
   time: Date;
 }
 
@@ -13,6 +12,7 @@ export interface IOrder {
   usePoint: number;
   total: number;
   discount: number;
+  quantity: number;
   date: Date;
   status: IOrderStatus[];
   customer: ICustomer;
