@@ -5,5 +5,6 @@ export interface ICustomer {
   address: string;
   phone: string;
   pointUse: number;
+  point: number;
   orders: IOrder[];
 }
