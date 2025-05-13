@@ -73,6 +73,11 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ phone:
       },
     },
     {
+      $addFields: {
+        id: { $toString: '$_id' },
+      },
+    },
+    {
       $project: {
         _id: 0,
         __v: 0,

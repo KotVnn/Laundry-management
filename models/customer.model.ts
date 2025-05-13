@@ -4,6 +4,7 @@ const CustomerSchema = new mongoose.Schema({
   fullName: {
     type: String,
     required: false,
+    default: 'Khách lẻ',
   },
   address: {
     type: String,

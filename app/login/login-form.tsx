@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { POST_METHOD } from '@/lib/req';
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +21,12 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
     await POST_METHOD('/api/login', { username, password });
 
-    router.push('/man'); // hoặc redirect theo logic app của bạn
+    if (redirect) {
+      router.push(redirect);
+      return;
+    } else {
+      router.push('/man'); // hoặc redirect theo logic app của bạn
+    }
   };
 
   return (

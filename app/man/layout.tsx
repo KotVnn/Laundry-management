@@ -14,7 +14,7 @@ export default async function ManLayout({ children }: { children: React.ReactNod
     return redirect('/login');
   }
   const payload = await verifyToken(token);
-  if (!payload || payload.role.level !== 1) return redirect('/api/logout');
+  if (!payload || payload.role.level !== 1) return redirect('/logout');
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">

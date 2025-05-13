@@ -7,7 +7,16 @@ import { NavMain } from '@/components/nav-main';
 import { NavProjects } from '@/components/nav-projects';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar';
+import { IUser } from '@/interfaces/user.interface';
 
 const data = {
   navMain: [
@@ -96,7 +105,7 @@ const data = {
 
 // Định nghĩa các prop của AppSidebar
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: { username: string }; // Thông tin người dùng
+  user: IUser; // Thông tin người dùng
 }
 
 export function AppSidebar({ ...props }: AppSidebarProps) {

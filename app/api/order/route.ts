@@ -11,8 +11,9 @@ export async function GET(request: Request) {
   const pageIndex = Number(queryStr.get('page_index')) || 1;
   const pageSize = Number(queryStr.get('page_size')) || 10;
   const sortOrder = queryStr.get('sort') === '1' ? 1 : -1;
-  const phone = queryStr.get('phone') || undefined;
+  const note = queryStr.get('note') || undefined;
   const status = queryStr.get('status') || undefined;
+  const orderId = queryStr.get('orderId') || undefined;
 
   // Xử lý ngày từ param, dùng moment để dễ dàng xử lý
   const fromDate = queryStr.get('from')
@@ -35,8 +36,9 @@ export async function GET(request: Request) {
           $gte: fromDate.toDate(),
           $lte: toDate.toDate(),
         },
-        ...(phone ? { phone } : {}),
+        ...(note ? { note: new RegExp(note, 'i') } : {}),
         ...(status ? { status } : {}),
+        ...(orderId ? { id: orderId } : {}),
       },
     },
     {
@@ -59,12 +61,18 @@ export async function GET(request: Request) {
               as: 'customer',
               pipeline: [
                 {
+                  $addFields: {
+                    id: { $toString: '$_id' },
+                  },
+                },
+                {
                   $project: {
                     _id: 0,
                     fullName: 1,
                     phone: 1,
                     address: 1,
                     pointUsed: 1,
+                    id: 1,
                   },
                 },
               ],

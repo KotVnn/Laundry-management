@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -10,11 +10,11 @@ export function middleware(request: NextRequest) {
 
   if (pathname === '/login' && accessToken) {
     // Chỉ cần biết có token là redirect
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/man', request.url));
   }
 
   if (isProtectedRoute && !accessToken) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    return NextResponse.redirect(new URL(`/login?redirect=${request.nextUrl.pathname}`, request.url));
   }
 
   return NextResponse.next();
