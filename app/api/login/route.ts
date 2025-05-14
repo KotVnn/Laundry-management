@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     } else {
       const JWT_SECRET = process.env.JWT_SECRET!;
       const token = jwt.sign({ ...data._doc, password: undefined }, JWT_SECRET, {
-        expiresIn: '1h',
+        expiresIn: '30d',
       });
       const cc = await cookies();
       cc.set('accessToken', token, {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         secure: true,
         path: '/',
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24,
+        maxAge: 60 * 60 * 24 * 30,
       });
       return new Response(JSON.stringify(data), {
         status: 200,

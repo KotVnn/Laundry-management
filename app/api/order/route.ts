@@ -1,8 +1,10 @@
 import { IMetaPagination } from '@/interfaces/pagination.interface';
 import '@/lib/init';
 import Order from '@/models/order.model';
-import { PipelineStage } from 'mongoose';
+import { PipelineStage, Types } from 'mongoose';
 import moment from 'moment';
+import { IOrder } from '@/interfaces/order.interface';
+import Customer from '@/models/customer.model';
 
 export async function GET(request: Request) {
   const queryStr = new URL(request.url).searchParams;
@@ -12,6 +14,7 @@ export async function GET(request: Request) {
   const pageSize = Number(queryStr.get('page_size')) || 10;
   const sortOrder = queryStr.get('sort') === '1' ? 1 : -1;
   const note = queryStr.get('note') || undefined;
+
   const status = queryStr.get('status') || undefined;
   const orderId = queryStr.get('orderId') || undefined;
 
@@ -36,8 +39,10 @@ export async function GET(request: Request) {
           $gte: fromDate.toDate(),
           $lte: toDate.toDate(),
         },
-        ...(note ? { note: new RegExp(note, 'i') } : {}),
-        ...(status ? { status } : {}),
+        $or: [
+          ...(note ? [{ note: new RegExp(note, 'i') }] : [{}]),
+          ...(status ? [{ status }] : [{}]),
+        ],
         ...(orderId ? { id: orderId } : {}),
       },
     },
@@ -72,6 +77,7 @@ export async function GET(request: Request) {
                     phone: 1,
                     address: 1,
                     pointUsed: 1,
+                    point: 1,
                     id: 1,
                   },
                 },
@@ -87,8 +93,14 @@ export async function GET(request: Request) {
               as: 'statusData',
               pipeline: [
                 {
+                  $addFields: {
+                    mID: { $toString: '$_id' }
+                  }
+                },
+                {
                   $project: {
                     name: 1,
+                    mID: 1,
                     _id: 0,
                   },
                 },
@@ -106,6 +118,7 @@ export async function GET(request: Request) {
                       {
                         name: { $arrayElemAt: ['$statusData.name', '$$idx'] },
                         time: { $arrayElemAt: ['$status.time', '$$idx'] },
+                        mID: { $arrayElemAt: ['$statusData.mID', '$$idx'] },
                       },
                     ],
                   },
@@ -147,4 +160,114 @@ export async function GET(request: Request) {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
+}
+
+export async function POST(req: Request) {
+  try {
+    const order: IOrder = await req.json();
+    const phoneSanitized = order.customer.phone.replace(/[-. +]/g, '');
+
+    // Nếu khách hàng chưa có id, tạo mới
+    if (!order.customer.id.length) {
+      await Customer.findOneAndUpdate({ phone: phoneSanitized }, {
+        fullName: order.customer.fullName,
+        phone: phoneSanitized,
+        pointUsed: 0,
+        address: order.customer.address,
+      }, { upsert: true });
+    }
+
+    // Tìm khách hàng theo số điện thoại
+    const cus = await Customer.findOne({ phone: phoneSanitized });
+    if (!cus) return new Response(JSON.stringify({ message: 'Customer not found' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const obj = {
+      id: moment().format('MM-DD-YY-HHmm').replace(/-/g, ''),
+      quantity: order.quantity,
+      date: new Date(),
+      usePoint: !!order.discount,
+      point: order.point,
+      note: order.note,
+      total: order.total,
+      discount: order.discount,
+      status: [{ stt: new Types.ObjectId(order.newStatus ? order.newStatus : '') }],
+      customer: cus._id ? cus._id : cus._doc._id,
+    };
+
+    console.log(obj, 'obj backend');
+
+    let newOrder: any;
+    try {
+      // Tạo đơn hàng mới
+      newOrder = await Order.create(obj);
+      newOrder.save();
+    } catch (error: any) {
+      console.log(error, 'error backend');
+      return new Response(JSON.stringify({ message: error.message }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Cập nhật danh sách đơn hàng của khách hàng
+    await Customer.findOneAndUpdate(
+      { phone: phoneSanitized },
+      {
+        $push: {
+          orders: {
+            $each: [newOrder._id],
+            $position: 0,
+          },
+        },
+      },
+    );
+
+    return new Response(JSON.stringify(newOrder), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error: any) {
+    return new Response(JSON.stringify({ message: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const order = await Order.findOne({ id });
+  if (!order) return new Response(JSON.stringify({ message: 'Order not found' }), {
+    status: 500,
+    headers: { 'Content-Type': 'application/json' },
+  });
+  try {
+    await Customer.findOneAndUpdate(
+      {
+        orders: order._id ? order._id : order._doc._id,  // tìm Customer có order._id trong mảng orders
+      },
+      [
+        {
+          $set: {
+            point: {
+              $cond: {
+                if: { $lt: ['$point', order.point] }, // nếu point hiện tại < order.point
+                then: 0,
+                else: { $subtract: ['$point', order.point] }, // ngược lại, trừ đi
+              },
+            },
+          },
+        },
+      ],
+    );
+    const rs = await Order.findOneAndDelete({ id });
+    return Response.json(rs);
+  } catch (error: any) {
+    return new Response(JSON.stringify({ message: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }

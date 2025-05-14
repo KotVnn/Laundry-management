@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { API_URL } from '@/lib/utils';
 import { Textarea } from '../ui/textarea';
 import { IMetaPagination } from '@/interfaces/pagination.interface';
+import { IStatus } from '@/interfaces/status.interface';
+import { ComboboxComponent } from '@/components/combobox';
 
 export function OrderDetailComp({ order, setOrderAction }: {
   order: IOrder,
@@ -19,6 +21,7 @@ export function OrderDetailComp({ order, setOrderAction }: {
 
   const [pointPlus, setPointPlus] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [status, setStatus] = useState<IStatus[]>();
 
   // useEffect(() => {
   //   order.discount = 0;
@@ -58,19 +61,24 @@ export function OrderDetailComp({ order, setOrderAction }: {
   // }, [obj]);
 
   useEffect(() => {
-    if (order.id.length) {
-      GET_METHOD(`${API_URL}/customer?phone=${order.customer.phone}&orderId=${order.id}`)
-        .then((rs: IMetaPagination) => {
-          if (rs.data && rs.data.length) {
-            setCustomer(rs.data[0]);
-            setOrderAction({ ...order, customer: { ...rs.data[0] } });
-          }
-        })
-    }
     if (pointPlus) return;
     GET_METHOD(`${API_URL}/point`).then(point => {
       setDiscount(point.discount);
       setPointPlus(Math.round(order.total / 100000 * point.discount));
+    });
+    GET_METHOD(`${API_URL}/status`).then(status => {
+      setStatus(status);
+      if (order.id.length) {
+        GET_METHOD(`${API_URL}/customer?phone=${order.customer.phone}&orderId=${order.id}`)
+          .then((rs: IMetaPagination) => {
+            if (rs.data && rs.data.length) {
+              setCustomer(rs.data[0]);
+              setOrderAction({ ...order, customer: { ...rs.data[0] } });
+            }
+          })
+      } else {
+        if (status && status.length > 0 && !order.newStatus) order.newStatus = status[0].mID;
+      }
     });
   }, []);
 
@@ -98,6 +106,19 @@ export function OrderDetailComp({ order, setOrderAction }: {
       if (order.id.length) {
         order.point = p;
       }
+    }
+    if (field === 'status') {
+      if (!order.status.length) {
+        order.newStatus = value;
+      } else {
+        if (order.status[order.status.length - 1].mID !== value) {
+          order.newStatus = value;
+        } else {
+          order.newStatus = undefined;
+        }
+      }
+      field = 'newStatus';
+      console.log(order.newStatus, 'order.newStatus');
     }
     setOrderAction({ ...order, [field]: value });
   };
@@ -175,6 +196,15 @@ export function OrderDetailComp({ order, setOrderAction }: {
           onChange={(e) => handleOrderChange('quantity', e.target.valueAsNumber)}
         />
       </div>
+      {/* Trạng thái */}
+      {status && status.length > 0 && (
+        <div className="flex-col space-y-2">
+          <Label htmlFor="quantity">Trạng thái</Label>
+          <ComboboxComponent frameworks={status.map((el: IStatus) => {
+            return { label: el.name, value: el.mID };
+          })} current={!order.status.length ? status[0].mID : order.status[order.status.length-1].mID} cb={(val: string) => handleOrderChange('status', val)} />
+        </div>
+      )}
       {/* Tổng tiền */}
       <div className="flex-col space-y-2">
         <Label htmlFor="total">Tổng tiền ({`+${pointPlus} điểm`})</Label>

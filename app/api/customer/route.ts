@@ -93,29 +93,44 @@ export async function GET(request: Request) {
                   vars: {
                     // truyền orderId vào để kiểm tra
                     queryOrderId: orderId,
+                    // queryOrderId: null,
                   },
                   in: {
                     $cond: [
-                      { $ne: ['$$queryOrderId', null] }, // nếu orderId có tồn tại
+                      { $ne: ['$$queryOrderId', null] },
                       {
                         $reduce: {
                           input: '$orders',
-                          initialValue: 0,
+                          initialValue: {
+                            total: 0,
+                            stop: false,
+                          },
                           in: {
                             $cond: [
-                              { $eq: ['$$this.id', '$$queryOrderId'] }, // kiểm tra đúng id
-                              '$$value',
-                              { $add: ['$$value', '$$this.point'] },
+                              { $or: ['$$value.stop', { $eq: ['$$this.id', '$$queryOrderId'] }] },
+                              {
+                                total: '$$value.total',
+                                stop: true,
+                              },
+                              {
+                                total: { $add: ['$$value.total', '$$this.point'] },
+                                stop: false,
+                              },
                             ],
                           },
                         },
                       },
-                      { $sum: '$orders.point' }, // không có orderId, cộng tất cả
-                    ],
+                      { total: { $sum: '$orders.point' }, stop: false }
+                    ]
                   },
                 },
               },
             },
+          },
+          {
+            $addFields: {
+              point: '$point.total'
+            }
           },
           {
             $addFields: {

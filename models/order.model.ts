@@ -1,4 +1,5 @@
 import mongoose, { SchemaTypes } from 'mongoose';
+import moment from 'moment';
 
 const StatusOrderSchema = new mongoose.Schema(
   {
@@ -20,12 +21,18 @@ const OrderSchema = new mongoose.Schema({
   id: {
     type: String,
     required: true,
+    unique: true,
+    default: () => moment().format('MM-DD-YY-HHmm').replace(/-/g, ''),
   },
   note: {
     type: String,
     required: true,
   },
   point: {
+    type: Number,
+    required: true,
+  },
+  quantity: {
     type: Number,
     required: true,
   },

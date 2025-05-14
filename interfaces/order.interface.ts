@@ -15,5 +15,6 @@ export interface IOrder {
   quantity: number;
   date: Date;
   status: IOrderStatus[];
+  newStatus?: string;
   customer: ICustomer;
 }

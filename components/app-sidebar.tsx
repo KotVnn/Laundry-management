@@ -1,10 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { BookOpen, Bot, Command, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from 'lucide-react';
+import { BookOpen, Command, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
-import { NavProjects } from '@/components/nav-projects';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -17,36 +16,26 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { IUser } from '@/interfaces/user.interface';
+import Link from 'next/link';
 
 const data = {
   navMain: [
     {
-      title: 'Keys',
-      url: '/dashboard/keys',
+      title: 'Đơn giặt',
+      url: '/man/order',
       icon: BookOpen,
       items: [
         {
-          title: 'Add new key',
-          url: '/dashboard/keys/add',
+          title: 'Tạo đơn',
+          url: '/man/order/create',
         },
       ],
     },
     {
-      title: 'Computers',
-      url: '/dashboard/computers',
+      title: 'Khách hàng',
+      url: '/man/customer',
       icon: SquareTerminal,
       isActive: true,
-    },
-    {
-      title: 'Users',
-      url: '/dashboard/users',
-      icon: Bot,
-      items: [
-        {
-          title: 'Add new user',
-          url: '/dashboard/users/add',
-        },
-      ],
     },
     {
       title: 'Settings',
@@ -115,22 +104,22 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="/man">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Laundry</span>
-                  <span className="truncate text-xs">Dashboard</span>
+                  <span className="truncate font-medium">Giặt là 83</span>
+                  <span className="truncate text-xs">Quản trị</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/*<NavProjects projects={data.projects} />*/}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
