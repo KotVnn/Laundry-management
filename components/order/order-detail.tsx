@@ -12,6 +12,7 @@ import { Textarea } from '../ui/textarea';
 import { IMetaPagination } from '@/interfaces/pagination.interface';
 import { IStatus } from '@/interfaces/status.interface';
 import { ComboboxComponent } from '@/components/combobox';
+import { useAppContext } from '@/context/app-context';
 
 export function OrderDetailComp({ order, setOrderAction }: {
   order: IOrder,
@@ -20,66 +21,22 @@ export function OrderDetailComp({ order, setOrderAction }: {
   const [customer, setCustomer] = useState<ICustomer>({ ...order.customer });
 
   const [pointPlus, setPointPlus] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [status, setStatus] = useState<IStatus[]>();
-
-  // useEffect(() => {
-  //   order.discount = 0;
-  //   setCustomer({
-  //     fullName: '',
-  //     address: '',
-  //     phone: '',
-  //     point: 0,
-  //     pointUse: 0,
-  //     orders: [],
-  //   });
-  //   order.customer = { ...customer };
-  //   if (obj.phone && obj.phone.length === 10) {
-  //     GET_METHOD(`/api/customer/detail/${obj.phone.replace(/\+84| /g, '0').trim()}`)
-  //       .then((cus: ICustomer) => {
-  //         if (cus.phone) {
-  //           setCustomer(cus);
-  //           setOrder(prev => ({ ...prev, customer: { ...cus } }));
-  //         }
-  //         order.customer.phone = obj.phone || '';
-  //         setOrder(prev => ({ ...prev }));
-  //       })
-  //       .catch((err) => {
-  //         order.customer.phone = obj.phone || '';
-  //         toast.error(err.message);
-  //       });
-  //   } else if (obj.orderId) {
-  //     GET_METHOD(`${API_URL}/order/detail/${obj.orderId}`)
-  //       .then((ord: IOrder) => {
-  //         setOrder(ord);
-  //         setCustomer(ord.customer);
-  //       })
-  //       .catch((err) => {
-  //         toast.error(err.message);
-  //       });
-  //   }
-  // }, [obj]);
+  const { config } = useAppContext()
 
   useEffect(() => {
     if (pointPlus) return;
-    GET_METHOD(`${API_URL}/point`).then(point => {
-      setDiscount(point.discount);
-      setPointPlus(Math.round(order.total / 100000 * point.discount));
-    });
-    GET_METHOD(`${API_URL}/status`).then(status => {
-      setStatus(status);
-      if (order.id.length) {
-        GET_METHOD(`${API_URL}/customer?phone=${order.customer.phone}&orderId=${order.id}`)
-          .then((rs: IMetaPagination) => {
-            if (rs.data && rs.data.length) {
-              setCustomer(rs.data[0]);
-              setOrderAction({ ...order, customer: { ...rs.data[0] } });
-            }
-          })
-      } else {
-        if (status && status.length > 0 && !order.newStatus) order.newStatus = status[0].mID;
-      }
-    });
+    setPointPlus(Math.round(order.total / 100000 * config.discount));
+    if (order.id.length) {
+      GET_METHOD(`${API_URL}/customer?phone=${order.customer.phone}&orderId=${order.id}`)
+        .then((rs: IMetaPagination) => {
+          if (rs.data && rs.data.length) {
+            setCustomer(rs.data[0]);
+            setOrderAction({ ...order, customer: { ...rs.data[0] } });
+          }
+        })
+    } else {
+      if (status && status.length > 0 && !order.newStatus) order.newStatus = config.status[0].mID;
+    }
   }, []);
 
   // Hàm cập nhật khách hàng, gọi setState để hai chiều đều cập nhật
@@ -101,7 +58,7 @@ export function OrderDetailComp({ order, setOrderAction }: {
       order.customer.point = customer.point - value;
     }
     if (field === 'total') {
-      const p = Math.round((value / 100000) * discount);
+      const p = Math.round((value / 100000) * config.discount);
       setPointPlus(p);
       if (order.id.length) {
         order.point = p;
@@ -118,7 +75,6 @@ export function OrderDetailComp({ order, setOrderAction }: {
         }
       }
       field = 'newStatus';
-      console.log(order.newStatus, 'order.newStatus');
     }
     setOrderAction({ ...order, [field]: value });
   };
@@ -197,12 +153,12 @@ export function OrderDetailComp({ order, setOrderAction }: {
         />
       </div>
       {/* Trạng thái */}
-      {status && status.length > 0 && (
+      {config.status && config.status.length > 0 && (
         <div className="flex-col space-y-2">
           <Label htmlFor="quantity">Trạng thái</Label>
-          <ComboboxComponent frameworks={status.map((el: IStatus) => {
+          <ComboboxComponent frameworks={config.status.map((el: IStatus) => {
             return { label: el.name, value: el.mID };
-          })} current={!order.status.length ? status[0].mID : order.status[order.status.length-1].mID} cb={(val: string) => handleOrderChange('status', val)} />
+          })} current={!order.status.length ? config.status[0].mID : order.status[order.status.length-1].mID} cb={(val: string) => handleOrderChange('status', val)} />
         </div>
       )}
       {/* Tổng tiền */}

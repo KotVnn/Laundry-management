@@ -117,8 +117,8 @@ export async function GET(request: Request) {
                     $mergeObjects: [
                       {
                         name: { $arrayElemAt: ['$statusData.name', '$$idx'] },
-                        time: { $arrayElemAt: ['$status.time', '$$idx'] },
                         mID: { $arrayElemAt: ['$statusData.mID', '$$idx'] },
+                        time: { $arrayElemAt: ['$status.time', '$$idx'] },
                       },
                     ],
                   },
@@ -129,7 +129,7 @@ export async function GET(request: Request) {
           {
             $project: {
               _id: 0,
-              statusData: 0,
+              // statusData: 0,
               __v: 0,
             },
           },
@@ -197,15 +197,12 @@ export async function POST(req: Request) {
       customer: cus._id ? cus._id : cus._doc._id,
     };
 
-    console.log(obj, 'obj backend');
-
     let newOrder: any;
     try {
       // Tạo đơn hàng mới
       newOrder = await Order.create(obj);
       newOrder.save();
     } catch (error: any) {
-      console.log(error, 'error backend');
       return new Response(JSON.stringify({ message: error.message }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
@@ -228,42 +225,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify(newOrder), {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error: any) {
-    return new Response(JSON.stringify({ message: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
-export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const order = await Order.findOne({ id });
-  if (!order) return new Response(JSON.stringify({ message: 'Order not found' }), {
-    status: 500,
-    headers: { 'Content-Type': 'application/json' },
-  });
-  try {
-    await Customer.findOneAndUpdate(
-      {
-        orders: order._id ? order._id : order._doc._id,  // tìm Customer có order._id trong mảng orders
-      },
-      [
-        {
-          $set: {
-            point: {
-              $cond: {
-                if: { $lt: ['$point', order.point] }, // nếu point hiện tại < order.point
-                then: 0,
-                else: { $subtract: ['$point', order.point] }, // ngược lại, trừ đi
-              },
-            },
-          },
-        },
-      ],
-    );
-    const rs = await Order.findOneAndDelete({ id });
-    return Response.json(rs);
   } catch (error: any) {
     return new Response(JSON.stringify({ message: error.message }), {
       status: 500,

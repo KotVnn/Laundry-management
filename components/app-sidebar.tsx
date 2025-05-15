@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 import { IUser } from '@/interfaces/user.interface';
 import Link from 'next/link';
+import { useAppContext } from '@/context/app-context';
 
 const data = {
   navMain: [
@@ -98,6 +99,8 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ ...props }: AppSidebarProps) {
+  const { config } = useAppContext()
+
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!" {...props}>
       <SidebarHeader>
@@ -109,7 +112,7 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Giặt là 83</span>
+                  <span className="truncate font-medium">{config.title}</span>
                   <span className="truncate text-xs">Quản trị</span>
                 </div>
               </Link>

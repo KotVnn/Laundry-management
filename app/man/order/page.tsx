@@ -1,6 +1,6 @@
 'use client';
 
-import { GET_METHOD, POST_METHOD, PUT_METHOD } from '@/lib/req';
+import { DELETE_METHOD, GET_METHOD, PUT_METHOD } from '@/lib/req';
 import { IOrder } from '@/interfaces/order.interface';
 import { Column } from '@/models/data.model';
 import DataList from '@/components/table/data-list';
@@ -11,7 +11,7 @@ import moment from 'moment';
 import { formatVND } from '@/lib/utils';
 import { ComboboxComponent } from '@/components/combobox';
 import { IComboBox } from '@/interfaces/combobox.interface';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DatePickerWithRangeComponent } from '@/components/date-range';
 import { DateRange } from 'react-day-picker';
 import {
@@ -25,13 +25,24 @@ import {
 } from '@/components/ui/sheet';
 import { OrderDetailComp } from '@/components/order/order-detail';
 import { toast } from 'sonner';
+import {
+  Dialog, DialogClose,
+  DialogContent,
+  DialogDescription, DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { useAppContext } from '@/context/app-context';
 
 export default function OrderPage() {
+  const { config } = useAppContext()
   const [result, setResult] = useState<IMetaPagination | null>();
   const [pageSize, setPageSize] = useState<number>(0);
   const [order, setOrder] = useState<IOrder>();
-  const [sort, setSort] = useState<string>("-1");
-
+  const [sort, setSort] = useState<string>('-1');
+  const dataList = useRef<HTMLButtonElement>(null);
   const sortArr: IComboBox[] = [
     { value: '-1', label: 'Mới nhất' }, { value: '1', label: 'Cũ nhất' },
   ];
@@ -96,7 +107,24 @@ export default function OrderPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleNext = () => {
+    if (!order) return;
+    if (order.status.length && order.status[order.status.length - 1].mID === config.status[config.status.length - 1].mID) {
+      toast.error('Thất bại', { description: `Đơn #${order.id} đã kết thúc.` });
+    }
+    config.status.forEach((val, index) => {
+      if (val.mID === order.status[order.status.length - 1].mID) {
+        order.newStatus = config.status[index + 1].mID
+      }
+    })
+    PUT_METHOD(`/api/order/detail/${order.id}`, order).then(() => {
+      toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
+    }).catch(() => {
+      toast.error('Thất bại', { description: `Update đơn #${order.id} thất bại.` });
+    });
+  };
+
+  const handlePrint = () => {
   };
 
   const handleUpdate = () => {
@@ -105,7 +133,18 @@ export default function OrderPage() {
       toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
     }).catch(() => {
       toast.error('Thất bại', { description: `Update đơn #${order.id} thất bại.` });
-    })
+    });
+  };
+
+  const handleDelete = () => {
+    if (!order) return;
+    DELETE_METHOD(`/api/order/detail/${order.id}`).then(() => {
+      dataList.current?.click();
+      toast.success(`Thành công`, { description: `Xóa đơn #${order.id} thành công.` });
+    }).catch(() => {
+      dataList.current?.click();
+      toast.error('Thất bại', { description: `Xóa đơn #${order.id} thất bại.` });
+    });
   };
 
   const handleOpen = (open: boolean, row: IOrder) => {
@@ -130,16 +169,42 @@ export default function OrderPage() {
           {order && (
             <OrderDetailComp order={order} setOrderAction={setOrder} />
           )}
-          <div className="grid grid-cols-2 md:grid-cols-4 items-center justify-baseline p-3 gap-2">
-            <div onClick={handleSubmit}
-                 className="inline-block px-4 py-2 bg-red-700 text-white text-xs font-mono rounded hover:bg-red-800 cursor-pointer transition">
-              <SheetClose className="cursor-pointer">Delete</SheetClose>
+          <div className={`grid grid-cols-2 md:grid-cols-4 items-center justify-baseline p-3 gap-2`}>
+            <div className="inline-block px-4 py-2 bg-red-700 text-white text-xs font-mono rounded hover:bg-red-800 cursor-pointer transition">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <p>Delete</p>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Xóa đơn {`#${order?.id}`}</DialogTitle>
+                    <DialogDescription>
+                      Bạn có chắc chắn xóa đơn {`#${order?.id}`} không ?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button className="cursor-pointer" type="button" variant="secondary">
+                        Hủy
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button onClick={handleDelete} className="cursor-pointer" type="button" variant="destructive">
+                        Xóa
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <SheetClose asChild>
+                <button ref={dataList} style={{ display: 'none' }} />
+              </SheetClose>
             </div>
-            <div onClick={handleSubmit}
+            <div onClick={handlePrint}
                  className="inline-block px-4 py-2 bg-teal-800 text-white text-xs font-mono rounded hover:bg-teal-950 cursor-pointer transition">
               <SheetClose className="cursor-pointer">Print</SheetClose>
             </div>
-            <div onClick={handleSubmit}
+            <div onClick={handleNext}
                  className="inline-block px-4 py-2 bg-yellow-800 text-white text-xs font-mono rounded hover:bg-yellow-950 cursor-pointer transition">
               <SheetClose className="cursor-pointer">Next Status</SheetClose>
             </div>
