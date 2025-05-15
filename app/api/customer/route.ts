@@ -1,6 +1,7 @@
 import '@/lib/init';
 import Customer from '@/models/customer.model';
 import { PipelineStage } from 'mongoose';
+import { IMetaPagination } from '@/interfaces/pagination.interface';
 
 export async function GET(request: Request) {
   const queryStr = new URL(request.url).searchParams;
@@ -161,7 +162,19 @@ export async function GET(request: Request) {
       status: 201,
     });
   }
-  return new Response(JSON.stringify(result[0]), {
+
+  const total = result[0].totalCount[0]?.count || 0;
+  const data: IMetaPagination = {
+    meta: {
+      page_size: pageSize,
+      page_index: pageIndex,
+      page_total: Math.ceil(total / pageSize),
+      total,
+    },
+    data: result[0].data,
+  };
+
+  return new Response(JSON.stringify(data), {
     status: 200,
   });
 }

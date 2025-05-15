@@ -5,6 +5,7 @@ import { PipelineStage, Types } from 'mongoose';
 import moment from 'moment';
 import { IOrder } from '@/interfaces/order.interface';
 import Customer from '@/models/customer.model';
+import { ICustomer } from '@/interfaces/customer.interface';
 
 export async function GET(request: Request) {
   const queryStr = new URL(request.url).searchParams;
@@ -14,6 +15,7 @@ export async function GET(request: Request) {
   const pageSize = Number(queryStr.get('page_size')) || 10;
   const sortOrder = queryStr.get('sort') === '1' ? 1 : -1;
   const note = queryStr.get('note') || undefined;
+  const idCus = queryStr.get('idCus') || undefined;
 
   const status = queryStr.get('status') || undefined;
   const orderId = queryStr.get('orderId') || undefined;
@@ -44,6 +46,7 @@ export async function GET(request: Request) {
           ...(status ? [{ status }] : [{}]),
         ],
         ...(orderId ? { id: orderId } : {}),
+        ...(idCus ? { customer: new Types.ObjectId(idCus) } : {}),
       },
     },
     {

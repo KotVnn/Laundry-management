@@ -13,8 +13,8 @@ export interface IMetaPagination {
 export interface IQueryString {
   page_index: number;
   page_size: number;
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
   sort: string;
   phone?: string;
   status?: string;

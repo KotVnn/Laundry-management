@@ -35,7 +35,7 @@ export function OrderDetailComp({ order, setOrderAction }: {
           }
         })
     } else {
-      if (status && status.length > 0 && !order.newStatus) order.newStatus = config.status[0].mID;
+      if (config.status && config.status.length > 0 && !order.newStatus) order.newStatus = config.status[0].mID;
     }
   }, []);
 
@@ -76,7 +76,6 @@ export function OrderDetailComp({ order, setOrderAction }: {
       }
       field = 'newStatus';
     }
-    console.log(order, 'order detail');
     setOrderAction({ ...order, [field]: value });
   };
 
