@@ -8,15 +8,16 @@ COPY . .
 
 # Cài đặt dependencies
 RUN npm install
+RUN npm install -g yarn
 
 # Build production
-RUN npm run build
+RUN yarn build
 
 # ⛳ Stage 2: Run production
 FROM node:22-alpine AS runner
 
 # Cài thêm nếu cần hỗ trợ font hoặc image xử lý:
-RUN apk add --no-cache libc6-compat
+# RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
