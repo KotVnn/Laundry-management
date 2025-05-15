@@ -5,7 +5,6 @@ import { PipelineStage, Types } from 'mongoose';
 import moment from 'moment';
 import { IOrder } from '@/interfaces/order.interface';
 import Customer from '@/models/customer.model';
-import { ICustomer } from '@/interfaces/customer.interface';
 
 export async function GET(request: Request) {
   const queryStr = new URL(request.url).searchParams;

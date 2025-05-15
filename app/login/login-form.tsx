@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { API_URL, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,7 +19,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await POST_METHOD('/api/login', { username, password });
+    await POST_METHOD(`${API_URL}/login`, { username, password });
 
     if (redirect) {
       router.push(redirect);

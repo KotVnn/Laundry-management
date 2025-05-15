@@ -18,6 +18,7 @@ import { GET_METHOD, POST_METHOD } from '@/lib/req';
 import { ICustomer } from '@/interfaces/customer.interface';
 import { IOrder } from '@/interfaces/order.interface';
 import { OrderDetailComp } from '@/components/order/order-detail';
+import { API_URL } from '@/lib/utils';
 
 export default function CreateOrder() {
   const [phone, setPhone] = useState('');
@@ -28,7 +29,7 @@ export default function CreateOrder() {
   };
 
   const handleSubmit = () => {
-    POST_METHOD('/api/order', order).then((rs) => {
+    POST_METHOD(`${API_URL}/order`, order).then((rs) => {
       toast.success('Tạo đơn thành công', { description: JSON.stringify(rs) });
     }).catch((err) => {
       toast.error('Tạo đơn không thành công', { description: err.message });
@@ -38,7 +39,7 @@ export default function CreateOrder() {
   useEffect(() => {
     setOrder(undefined);
     if (!phone.length || phone.length != 10) return;
-    GET_METHOD(`/api/customer/detail/${phone.replace(/\+84| /g, '0').trim()}`)
+    GET_METHOD(`${API_URL}/customer/detail/${phone.replace(/\+84| /g, '0').trim()}`)
       .then((cus: ICustomer) => {
         setOrder({
           id: '',

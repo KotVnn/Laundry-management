@@ -1,5 +1,5 @@
 # ⛳ Stage 1: Build
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npm install
 RUN npm run build
 
 # ⛳ Stage 2: Run production
-FROM node:18-alpine AS runner
+FROM node:22-alpine AS runner
 
 # Cài thêm nếu cần hỗ trợ font hoặc image xử lý:
 RUN apk add --no-cache libc6-compat

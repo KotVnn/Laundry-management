@@ -8,7 +8,7 @@ import { IMetaPagination, IQueryString } from '@/interfaces/pagination.interface
 import { ICustomer } from '@/interfaces/customer.interface';
 import Link from 'next/link';
 import moment from 'moment';
-import { formatVND } from '@/lib/utils';
+import { API_URL, formatVND } from '@/lib/utils';
 import { ComboboxComponent } from '@/components/combobox';
 import { IComboBox } from '@/interfaces/combobox.interface';
 import React, { useEffect, useRef, useState } from 'react';
@@ -106,7 +106,7 @@ export function OrderList({idCus} : {idCus?: string}) {
         from = '';
         to = '';
       }
-      GET_METHOD(`/api/order?page_index=${page_index}&page_size=${page_size}&sort=${sort}${from.length? `&from=${from}` : ''}${to.length ? `&to=${to}`: ''}${idCus ? `&idCus=${idCus}` : ''}`).then((result: IMetaPagination) => {
+      GET_METHOD(`${API_URL}/order?page_index=${page_index}&page_size=${page_size}&sort=${sort}${from.length? `&from=${from}` : ''}${to.length ? `&to=${to}`: ''}${idCus ? `&idCus=${idCus}` : ''}`).then((result: IMetaPagination) => {
         setResult(result);
       });
     }
@@ -122,7 +122,7 @@ export function OrderList({idCus} : {idCus?: string}) {
         order.newStatus = config.status[index + 1].mID;
       }
     });
-    PUT_METHOD(`/api/order/detail/${order.id}`, order).then(() => {
+    PUT_METHOD(`${API_URL}/order/detail/${order.id}`, order).then(() => {
       toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
       handleGetData();
     }).catch(() => {
@@ -132,7 +132,7 @@ export function OrderList({idCus} : {idCus?: string}) {
 
   const handleUpdate = () => {
     if (!order) return;
-    PUT_METHOD(`/api/order/detail/${order.id}`, order).then(() => {
+    PUT_METHOD(`${API_URL}/order/detail/${order.id}`, order).then(() => {
       toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
       handleGetData();
     }).catch(() => {
@@ -142,7 +142,7 @@ export function OrderList({idCus} : {idCus?: string}) {
 
   const handleDelete = () => {
     if (!order) return;
-    DELETE_METHOD(`/api/order/detail/${order.id}`).then(() => {
+    DELETE_METHOD(`${API_URL}/order/detail/${order.id}`).then(() => {
       dataList.current?.click();
       toast.success(`Thành công`, { description: `Xóa đơn #${order.id} thành công.` });
       handleGetData();

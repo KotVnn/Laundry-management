@@ -25,4 +25,4 @@ export const formatVND = (amount: number): string => {
   return amount.toLocaleString('vi-VN') + 'đ';
 }
 
-export const API_URL = 'http://localhost:3000/api';
+export const API_URL = 'https://beta.giatchanlangson.com/api';

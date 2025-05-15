@@ -16,6 +16,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/c
 import { GET_METHOD } from '@/lib/req';
 import { useRouter } from 'next/navigation';
 import { IUser } from '@/interfaces/user.interface';
+import { API_URL } from '@/lib/utils';
 
 export function NavUser({ user }: { user: IUser }) {
   const { isMobile } = useSidebar();
@@ -60,7 +61,7 @@ export function NavUser({ user }: { user: IUser }) {
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('/dashboard/account')}>
+                <DropdownMenuItem className="cursor-pointer" onClick={() => router.push('#')}>
                   <BadgeCheck />
                   Account
                 </DropdownMenuItem>
@@ -77,7 +78,7 @@ export function NavUser({ user }: { user: IUser }) {
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => {
-                  GET_METHOD('/api/logout').then(() => router.push('/man'));
+                  GET_METHOD(`${API_URL}/logout`).then(() => router.push('/man'));
                 }}
               >
                 <LogOut />

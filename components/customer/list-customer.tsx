@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { ComboboxComponent } from '@/components/combobox';
 import DataList from '@/components/table/data-list';
 import Link from 'next/link';
+import { API_URL } from '@/lib/utils';
 
 export function ListCustomer() {
   const [result, setResult] = useState<IMetaPagination | null>();
@@ -61,7 +62,7 @@ export function ListCustomer() {
 
       setResult(null);
 
-      GET_METHOD(`/api/customer?page_index=${page_index}&page_size=${page_size}&sort=${sort}`).then((result: IMetaPagination) => {
+      GET_METHOD(`${API_URL}/customer?page_index=${page_index}&page_size=${page_size}&sort=${sort}`).then((result: IMetaPagination) => {
         setResult(result);
       });
     }
