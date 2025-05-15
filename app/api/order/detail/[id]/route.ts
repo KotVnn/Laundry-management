@@ -13,7 +13,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     total: order.total,
     discount: order.discount,
     quantity: order.quantity,
-    ...(order.newStatus && {
+    ...(order.newStatus && order.newStatus !== order.status[order.status.length - 1].mID && {
       $push: {
         status: { stt: order.newStatus },
       },

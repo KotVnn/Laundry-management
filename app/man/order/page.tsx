@@ -35,9 +35,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/context/app-context';
+import Receipt from '@/components/receipt-print';
 
 export default function OrderPage() {
-  const { config } = useAppContext()
+  const { config } = useAppContext();
   const [result, setResult] = useState<IMetaPagination | null>();
   const [pageSize, setPageSize] = useState<number>(0);
   const [order, setOrder] = useState<IOrder>();
@@ -114,11 +115,13 @@ export default function OrderPage() {
     }
     config.status.forEach((val, index) => {
       if (val.mID === order.status[order.status.length - 1].mID) {
-        order.newStatus = config.status[index + 1].mID
+        order.newStatus = config.status[index + 1].mID;
       }
-    })
+    });
+    console.log(order.status[order.status.length - 1].mID, order.newStatus);
     PUT_METHOD(`/api/order/detail/${order.id}`, order).then(() => {
       toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
+      handleGetData();
     }).catch(() => {
       toast.error('Thất bại', { description: `Update đơn #${order.id} thất bại.` });
     });
@@ -131,6 +134,7 @@ export default function OrderPage() {
     if (!order) return;
     PUT_METHOD(`/api/order/detail/${order.id}`, order).then(() => {
       toast.success(`Thành công`, { description: `Update đơn #${order.id} thành công.` });
+      handleGetData();
     }).catch(() => {
       toast.error('Thất bại', { description: `Update đơn #${order.id} thất bại.` });
     });
@@ -141,6 +145,7 @@ export default function OrderPage() {
     DELETE_METHOD(`/api/order/detail/${order.id}`).then(() => {
       dataList.current?.click();
       toast.success(`Thành công`, { description: `Xóa đơn #${order.id} thành công.` });
+      handleGetData();
     }).catch(() => {
       dataList.current?.click();
       toast.error('Thất bại', { description: `Xóa đơn #${order.id} thất bại.` });
@@ -150,8 +155,6 @@ export default function OrderPage() {
   const handleOpen = (open: boolean, row: IOrder) => {
     if (open) {
       setOrder(row);
-    } else {
-      handleGetData();
     }
   };
 
@@ -169,8 +172,9 @@ export default function OrderPage() {
           {order && (
             <OrderDetailComp order={order} setOrderAction={setOrder} />
           )}
-          <div className={`grid grid-cols-2 md:grid-cols-4 items-center justify-baseline p-3 gap-2`}>
-            <div className="inline-block px-4 py-2 bg-red-700 text-white text-xs font-mono rounded hover:bg-red-800 cursor-pointer transition">
+          <div className={`grid grid-cols-2 ${order && order.status && order.status.length && order.status[order.status.length - 1].mID === config.status[config.status.length - 1].mID ? 'md:grid-cols-3' : 'md:grid-cols-4'} items-center justify-baseline p-3 gap-2`}>
+            <div
+              className="inline-block px-4 py-2 bg-red-700 text-white text-xs font-mono rounded hover:bg-red-800 cursor-pointer transition">
               <Dialog>
                 <DialogTrigger asChild>
                   <p>Delete</p>
@@ -202,12 +206,45 @@ export default function OrderPage() {
             </div>
             <div onClick={handlePrint}
                  className="inline-block px-4 py-2 bg-teal-800 text-white text-xs font-mono rounded hover:bg-teal-950 cursor-pointer transition">
-              <SheetClose className="cursor-pointer">Print</SheetClose>
+              {/*<SheetClose className="cursor-pointer">Print</SheetClose>*/}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <p>Print</p>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>đơn {`#${order?.id}`}</DialogTitle>
+                    <DialogDescription>
+                      Bạn có chắc chắn xóa đơn {`#${order?.id}`} không ?
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogContent>
+                    <Receipt order={row} />
+                  </DialogContent>
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button className="cursor-pointer" type="button" variant="secondary">
+                        Hủy
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button onClick={handleDelete} className="cursor-pointer" type="button" variant="destructive">
+                        Xóa
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <SheetClose asChild>
+                <button ref={dataList} style={{ display: 'none' }} />
+              </SheetClose>
             </div>
-            <div onClick={handleNext}
-                 className="inline-block px-4 py-2 bg-yellow-800 text-white text-xs font-mono rounded hover:bg-yellow-950 cursor-pointer transition">
-              <SheetClose className="cursor-pointer">Next Status</SheetClose>
-            </div>
+            {order && order.status && order.status.length && order.status[order.status.length - 1].mID !== config.status[config.status.length - 1].mID && (
+              <div onClick={handleNext}
+                   className="inline-block px-4 py-2 bg-yellow-800 text-white text-xs font-mono rounded hover:bg-yellow-950 cursor-pointer transition">
+                <SheetClose className="cursor-pointer">Next Status</SheetClose>
+              </div>
+            )}
             <div onClick={handleUpdate}
                  className="inline-block px-4 py-2 bg-blue-600 text-white text-xs font-mono rounded hover:bg-blue-700 cursor-pointer transition">
               <SheetClose className="cursor-pointer">Update</SheetClose>

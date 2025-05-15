@@ -76,6 +76,7 @@ export function OrderDetailComp({ order, setOrderAction }: {
       }
       field = 'newStatus';
     }
+    console.log(order, 'order detail');
     setOrderAction({ ...order, [field]: value });
   };
 

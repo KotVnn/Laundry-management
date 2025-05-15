@@ -87,49 +87,71 @@ export async function GET(request: Request) {
           { $unwind: '$customer' },
           {
             $lookup: {
-              from: 'status',
-              localField: 'status.stt',
-              foreignField: '_id',
-              as: 'statusData',
+              from: "status",
+              let: { sttList: "$status.stt" },
               pipeline: [
                 {
+                  $match: {
+                    $expr: {
+                      $in: ["$_id", "$$sttList"]
+                    }
+                  }
+                },
+                {
                   $addFields: {
-                    mID: { $toString: '$_id' }
+                    mID: { $toString: "$_id" }
                   }
                 },
                 {
                   $project: {
+                    _id: 0,
                     name: 1,
                     mID: 1,
-                    _id: 0,
-                  },
-                },
+                    stt: "$_id"
+                  }
+                }
               ],
-            },
+              as: "statusData"
+            }
           },
           {
             $addFields: {
               status: {
                 $map: {
-                  input: { $range: [0, { $size: '$status' }] },
-                  as: 'idx',
+                  input: "$status",
+                  as: "s",
                   in: {
                     $mergeObjects: [
+                      "$$s",
                       {
-                        name: { $arrayElemAt: ['$statusData.name', '$$idx'] },
-                        mID: { $arrayElemAt: ['$statusData.mID', '$$idx'] },
-                        time: { $arrayElemAt: ['$status.time', '$$idx'] },
-                      },
-                    ],
-                  },
-                },
-              },
-            },
+                        $let: {
+                          vars: {
+                            matched: {
+                              $first: {
+                                $filter: {
+                                  input: "$statusData",
+                                  as: "d",
+                                  cond: { $eq: ["$$d.stt", "$$s.stt"] }
+                                }
+                              }
+                            }
+                          },
+                          in: {
+                            name: "$$matched.name",
+                            mID: "$$matched.mID"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
           },
           {
             $project: {
               _id: 0,
-              // statusData: 0,
+              statusData: 0,
               __v: 0,
             },
           },
